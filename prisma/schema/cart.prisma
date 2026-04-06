@@ -1,0 +1,11 @@
+model Cart {
+  id     String @id @default(uuid(7))
+  userId String @unique
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  cartItems CartItem[]
+
+  @@index([userId], name: "cart_user_id_idx")
+  @@map("carts")
+}

@@ -1,0 +1,15 @@
+model CartItem {
+  id               String @id @default(uuid(7))
+  cartId           String
+  sellerMedicineId String
+
+  quantity Int
+
+  cart           Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  sellerMedicine SellerMedicine @relation(fields: [sellerMedicineId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, sellerMedicineId])
+  @@index([cartId], name: "cart_item_cart_id_idx")
+  @@index([sellerMedicineId], name: "cart_item_seller_medicine_id_idx")
+  @@map("cart_items")
+}

@@ -1,0 +1,19 @@
+enum OrderStatus {
+  PENDING
+  PLACED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+}
+
+enum Role {
+  CUSTOMER
+  SELLER
+  ADMIN
+}
