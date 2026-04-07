@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "rootDir": "./src",
+    "rootDir": "./",
     "outDir": "./dist",
     "moduleResolution": "bundler",
     "target": "ES2023",
@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "prisma.config.ts"],
+  "include": ["src"],
   "exclude": ["dist", "node_modules"]
 }

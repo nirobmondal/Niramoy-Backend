@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { auth as betterAuth } from "../lib/auth";
 import { Role } from "../../generated/prisma/enums";
 
-const auth = (...roles: Role[]) => {
+export const checkAuth = (...roles: Role[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const session = await betterAuth.api.getSession({
       headers: req.headers as any,
@@ -44,5 +44,3 @@ const auth = (...roles: Role[]) => {
     next();
   };
 };
-
-export default auth;

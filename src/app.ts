@@ -6,6 +6,7 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./app/lib/auth";
 import { notFound } from "./app/middleware/notFound";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
+import { indexRoutes } from "./app/routes";
 
 const app: Application = express();
 
@@ -36,6 +37,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.all("/api/auth/*splat", toNodeHandler(auth));
+app.use("/api", indexRoutes);
 
 app.use(globalErrorHandler);
 app.use(notFound);
