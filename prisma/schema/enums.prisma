@@ -1,5 +1,4 @@
 enum OrderStatus {
-  PENDING
   PLACED
   PROCESSING
   SHIPPED
@@ -8,7 +7,7 @@ enum OrderStatus {
 }
 
 enum PaymentStatus {
-  PENDING
+  UNPAID
   PAID
 }
 

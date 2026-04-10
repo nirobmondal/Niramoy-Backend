@@ -39,25 +39,31 @@ export type OrderItemSumAggregateOutputType = {
 export type OrderItemMinAggregateOutputType = {
   id: string | null
   orderId: string | null
-  sellerMedicineId: string | null
+  medicineId: string | null
   quantity: number | null
   price: runtime.Decimal | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type OrderItemMaxAggregateOutputType = {
   id: string | null
   orderId: string | null
-  sellerMedicineId: string | null
+  medicineId: string | null
   quantity: number | null
   price: runtime.Decimal | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type OrderItemCountAggregateOutputType = {
   id: number
   orderId: number
-  sellerMedicineId: number
+  medicineId: number
   quantity: number
   price: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -75,25 +81,31 @@ export type OrderItemSumAggregateInputType = {
 export type OrderItemMinAggregateInputType = {
   id?: true
   orderId?: true
-  sellerMedicineId?: true
+  medicineId?: true
   quantity?: true
   price?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type OrderItemMaxAggregateInputType = {
   id?: true
   orderId?: true
-  sellerMedicineId?: true
+  medicineId?: true
   quantity?: true
   price?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type OrderItemCountAggregateInputType = {
   id?: true
   orderId?: true
-  sellerMedicineId?: true
+  medicineId?: true
   quantity?: true
   price?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -186,9 +198,11 @@ export type OrderItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type OrderItemGroupByOutputType = {
   id: string
   orderId: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
   price: runtime.Decimal
+  createdAt: Date
+  updatedAt: Date
   _count: OrderItemCountAggregateOutputType | null
   _avg: OrderItemAvgAggregateOutputType | null
   _sum: OrderItemSumAggregateOutputType | null
@@ -217,43 +231,51 @@ export type OrderItemWhereInput = {
   NOT?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   id?: Prisma.StringFilter<"OrderItem"> | string
   orderId?: Prisma.StringFilter<"OrderItem"> | string
-  sellerMedicineId?: Prisma.StringFilter<"OrderItem"> | string
+  medicineId?: Prisma.StringFilter<"OrderItem"> | string
   quantity?: Prisma.IntFilter<"OrderItem"> | number
   price?: Prisma.DecimalFilter<"OrderItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
-  sellerMedicine?: Prisma.XOR<Prisma.SellerMedicineScalarRelationFilter, Prisma.SellerMedicineWhereInput>
+  medicine?: Prisma.XOR<Prisma.MedicineScalarRelationFilter, Prisma.MedicineWhereInput>
 }
 
 export type OrderItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
-  sellerMedicine?: Prisma.SellerMedicineOrderByWithRelationInput
+  medicine?: Prisma.MedicineOrderByWithRelationInput
 }
 
 export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  orderId_sellerMedicineId?: Prisma.OrderItemOrderIdSellerMedicineIdCompoundUniqueInput
+  orderId_medicineId?: Prisma.OrderItemOrderIdMedicineIdCompoundUniqueInput
   AND?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   OR?: Prisma.OrderItemWhereInput[]
   NOT?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   orderId?: Prisma.StringFilter<"OrderItem"> | string
-  sellerMedicineId?: Prisma.StringFilter<"OrderItem"> | string
+  medicineId?: Prisma.StringFilter<"OrderItem"> | string
   quantity?: Prisma.IntFilter<"OrderItem"> | number
   price?: Prisma.DecimalFilter<"OrderItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
-  sellerMedicine?: Prisma.XOR<Prisma.SellerMedicineScalarRelationFilter, Prisma.SellerMedicineWhereInput>
-}, "id" | "orderId_sellerMedicineId">
+  medicine?: Prisma.XOR<Prisma.MedicineScalarRelationFilter, Prisma.MedicineWhereInput>
+}, "id" | "orderId_medicineId">
 
 export type OrderItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrderItemCountOrderByAggregateInput
   _avg?: Prisma.OrderItemAvgOrderByAggregateInput
   _max?: Prisma.OrderItemMaxOrderByAggregateInput
@@ -267,63 +289,79 @@ export type OrderItemScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OrderItemScalarWhereWithAggregatesInput | Prisma.OrderItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
-  sellerMedicineId?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
+  medicineId?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
   quantity?: Prisma.IntWithAggregatesFilter<"OrderItem"> | number
   price?: Prisma.DecimalWithAggregatesFilter<"OrderItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"OrderItem"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"OrderItem"> | Date | string
 }
 
 export type OrderItemCreateInput = {
   id?: string
   quantity: number
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutOrderItemsInput
-  sellerMedicine: Prisma.SellerMedicineCreateNestedOneWithoutOrderItemsInput
+  medicine: Prisma.MedicineCreateNestedOneWithoutOrderItemsInput
 }
 
 export type OrderItemUncheckedCreateInput = {
   id?: string
   orderId: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type OrderItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutOrderItemsNestedInput
-  sellerMedicine?: Prisma.SellerMedicineUpdateOneRequiredWithoutOrderItemsNestedInput
+  medicine?: Prisma.MedicineUpdateOneRequiredWithoutOrderItemsNestedInput
 }
 
 export type OrderItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerMedicineId?: Prisma.StringFieldUpdateOperationsInput | string
+  medicineId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderItemCreateManyInput = {
   id?: string
   orderId: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type OrderItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerMedicineId?: Prisma.StringFieldUpdateOperationsInput | string
+  medicineId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderItemListRelationFilter = {
@@ -336,17 +374,19 @@ export type OrderItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type OrderItemOrderIdSellerMedicineIdCompoundUniqueInput = {
+export type OrderItemOrderIdMedicineIdCompoundUniqueInput = {
   orderId: string
-  sellerMedicineId: string
+  medicineId: string
 }
 
 export type OrderItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type OrderItemAvgOrderByAggregateInput = {
@@ -357,22 +397,68 @@ export type OrderItemAvgOrderByAggregateInput = {
 export type OrderItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type OrderItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type OrderItemSumOrderByAggregateInput = {
   quantity?: Prisma.SortOrder
   price?: Prisma.SortOrder
+}
+
+export type OrderItemCreateNestedManyWithoutMedicineInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutMedicineInput, Prisma.OrderItemUncheckedCreateWithoutMedicineInput> | Prisma.OrderItemCreateWithoutMedicineInput[] | Prisma.OrderItemUncheckedCreateWithoutMedicineInput[]
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutMedicineInput | Prisma.OrderItemCreateOrConnectWithoutMedicineInput[]
+  createMany?: Prisma.OrderItemCreateManyMedicineInputEnvelope
+  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+}
+
+export type OrderItemUncheckedCreateNestedManyWithoutMedicineInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutMedicineInput, Prisma.OrderItemUncheckedCreateWithoutMedicineInput> | Prisma.OrderItemCreateWithoutMedicineInput[] | Prisma.OrderItemUncheckedCreateWithoutMedicineInput[]
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutMedicineInput | Prisma.OrderItemCreateOrConnectWithoutMedicineInput[]
+  createMany?: Prisma.OrderItemCreateManyMedicineInputEnvelope
+  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+}
+
+export type OrderItemUpdateManyWithoutMedicineNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutMedicineInput, Prisma.OrderItemUncheckedCreateWithoutMedicineInput> | Prisma.OrderItemCreateWithoutMedicineInput[] | Prisma.OrderItemUncheckedCreateWithoutMedicineInput[]
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutMedicineInput | Prisma.OrderItemCreateOrConnectWithoutMedicineInput[]
+  upsert?: Prisma.OrderItemUpsertWithWhereUniqueWithoutMedicineInput | Prisma.OrderItemUpsertWithWhereUniqueWithoutMedicineInput[]
+  createMany?: Prisma.OrderItemCreateManyMedicineInputEnvelope
+  set?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  disconnect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  delete?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  update?: Prisma.OrderItemUpdateWithWhereUniqueWithoutMedicineInput | Prisma.OrderItemUpdateWithWhereUniqueWithoutMedicineInput[]
+  updateMany?: Prisma.OrderItemUpdateManyWithWhereWithoutMedicineInput | Prisma.OrderItemUpdateManyWithWhereWithoutMedicineInput[]
+  deleteMany?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
+}
+
+export type OrderItemUncheckedUpdateManyWithoutMedicineNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutMedicineInput, Prisma.OrderItemUncheckedCreateWithoutMedicineInput> | Prisma.OrderItemCreateWithoutMedicineInput[] | Prisma.OrderItemUncheckedCreateWithoutMedicineInput[]
+  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutMedicineInput | Prisma.OrderItemCreateOrConnectWithoutMedicineInput[]
+  upsert?: Prisma.OrderItemUpsertWithWhereUniqueWithoutMedicineInput | Prisma.OrderItemUpsertWithWhereUniqueWithoutMedicineInput[]
+  createMany?: Prisma.OrderItemCreateManyMedicineInputEnvelope
+  set?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  disconnect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  delete?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+  update?: Prisma.OrderItemUpdateWithWhereUniqueWithoutMedicineInput | Prisma.OrderItemUpdateWithWhereUniqueWithoutMedicineInput[]
+  updateMany?: Prisma.OrderItemUpdateManyWithWhereWithoutMedicineInput | Prisma.OrderItemUpdateManyWithWhereWithoutMedicineInput[]
+  deleteMany?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
 }
 
 export type OrderItemCreateNestedManyWithoutOrderInput = {
@@ -417,60 +503,79 @@ export type OrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
   deleteMany?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
 }
 
-export type OrderItemCreateNestedManyWithoutSellerMedicineInput = {
-  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutSellerMedicineInput, Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput> | Prisma.OrderItemCreateWithoutSellerMedicineInput[] | Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput[]
-  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutSellerMedicineInput | Prisma.OrderItemCreateOrConnectWithoutSellerMedicineInput[]
-  createMany?: Prisma.OrderItemCreateManySellerMedicineInputEnvelope
-  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+export type OrderItemCreateWithoutMedicineInput = {
+  id?: string
+  quantity: number
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutOrderItemsInput
 }
 
-export type OrderItemUncheckedCreateNestedManyWithoutSellerMedicineInput = {
-  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutSellerMedicineInput, Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput> | Prisma.OrderItemCreateWithoutSellerMedicineInput[] | Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput[]
-  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutSellerMedicineInput | Prisma.OrderItemCreateOrConnectWithoutSellerMedicineInput[]
-  createMany?: Prisma.OrderItemCreateManySellerMedicineInputEnvelope
-  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
+export type OrderItemUncheckedCreateWithoutMedicineInput = {
+  id?: string
+  orderId: string
+  quantity: number
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
-export type OrderItemUpdateManyWithoutSellerMedicineNestedInput = {
-  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutSellerMedicineInput, Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput> | Prisma.OrderItemCreateWithoutSellerMedicineInput[] | Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput[]
-  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutSellerMedicineInput | Prisma.OrderItemCreateOrConnectWithoutSellerMedicineInput[]
-  upsert?: Prisma.OrderItemUpsertWithWhereUniqueWithoutSellerMedicineInput | Prisma.OrderItemUpsertWithWhereUniqueWithoutSellerMedicineInput[]
-  createMany?: Prisma.OrderItemCreateManySellerMedicineInputEnvelope
-  set?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
-  disconnect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
-  delete?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
-  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
-  update?: Prisma.OrderItemUpdateWithWhereUniqueWithoutSellerMedicineInput | Prisma.OrderItemUpdateWithWhereUniqueWithoutSellerMedicineInput[]
-  updateMany?: Prisma.OrderItemUpdateManyWithWhereWithoutSellerMedicineInput | Prisma.OrderItemUpdateManyWithWhereWithoutSellerMedicineInput[]
-  deleteMany?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
+export type OrderItemCreateOrConnectWithoutMedicineInput = {
+  where: Prisma.OrderItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderItemCreateWithoutMedicineInput, Prisma.OrderItemUncheckedCreateWithoutMedicineInput>
 }
 
-export type OrderItemUncheckedUpdateManyWithoutSellerMedicineNestedInput = {
-  create?: Prisma.XOR<Prisma.OrderItemCreateWithoutSellerMedicineInput, Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput> | Prisma.OrderItemCreateWithoutSellerMedicineInput[] | Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput[]
-  connectOrCreate?: Prisma.OrderItemCreateOrConnectWithoutSellerMedicineInput | Prisma.OrderItemCreateOrConnectWithoutSellerMedicineInput[]
-  upsert?: Prisma.OrderItemUpsertWithWhereUniqueWithoutSellerMedicineInput | Prisma.OrderItemUpsertWithWhereUniqueWithoutSellerMedicineInput[]
-  createMany?: Prisma.OrderItemCreateManySellerMedicineInputEnvelope
-  set?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
-  disconnect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
-  delete?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
-  connect?: Prisma.OrderItemWhereUniqueInput | Prisma.OrderItemWhereUniqueInput[]
-  update?: Prisma.OrderItemUpdateWithWhereUniqueWithoutSellerMedicineInput | Prisma.OrderItemUpdateWithWhereUniqueWithoutSellerMedicineInput[]
-  updateMany?: Prisma.OrderItemUpdateManyWithWhereWithoutSellerMedicineInput | Prisma.OrderItemUpdateManyWithWhereWithoutSellerMedicineInput[]
-  deleteMany?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
+export type OrderItemCreateManyMedicineInputEnvelope = {
+  data: Prisma.OrderItemCreateManyMedicineInput | Prisma.OrderItemCreateManyMedicineInput[]
+  skipDuplicates?: boolean
+}
+
+export type OrderItemUpsertWithWhereUniqueWithoutMedicineInput = {
+  where: Prisma.OrderItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderItemUpdateWithoutMedicineInput, Prisma.OrderItemUncheckedUpdateWithoutMedicineInput>
+  create: Prisma.XOR<Prisma.OrderItemCreateWithoutMedicineInput, Prisma.OrderItemUncheckedCreateWithoutMedicineInput>
+}
+
+export type OrderItemUpdateWithWhereUniqueWithoutMedicineInput = {
+  where: Prisma.OrderItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderItemUpdateWithoutMedicineInput, Prisma.OrderItemUncheckedUpdateWithoutMedicineInput>
+}
+
+export type OrderItemUpdateManyWithWhereWithoutMedicineInput = {
+  where: Prisma.OrderItemScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderItemUpdateManyMutationInput, Prisma.OrderItemUncheckedUpdateManyWithoutMedicineInput>
+}
+
+export type OrderItemScalarWhereInput = {
+  AND?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
+  OR?: Prisma.OrderItemScalarWhereInput[]
+  NOT?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
+  id?: Prisma.StringFilter<"OrderItem"> | string
+  orderId?: Prisma.StringFilter<"OrderItem"> | string
+  medicineId?: Prisma.StringFilter<"OrderItem"> | string
+  quantity?: Prisma.IntFilter<"OrderItem"> | number
+  price?: Prisma.DecimalFilter<"OrderItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
 }
 
 export type OrderItemCreateWithoutOrderInput = {
   id?: string
   quantity: number
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  sellerMedicine: Prisma.SellerMedicineCreateNestedOneWithoutOrderItemsInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  medicine: Prisma.MedicineCreateNestedOneWithoutOrderItemsInput
 }
 
 export type OrderItemUncheckedCreateWithoutOrderInput = {
   id?: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type OrderItemCreateOrConnectWithoutOrderInput = {
@@ -499,111 +604,76 @@ export type OrderItemUpdateManyWithWhereWithoutOrderInput = {
   data: Prisma.XOR<Prisma.OrderItemUpdateManyMutationInput, Prisma.OrderItemUncheckedUpdateManyWithoutOrderInput>
 }
 
-export type OrderItemScalarWhereInput = {
-  AND?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
-  OR?: Prisma.OrderItemScalarWhereInput[]
-  NOT?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
-  id?: Prisma.StringFilter<"OrderItem"> | string
-  orderId?: Prisma.StringFilter<"OrderItem"> | string
-  sellerMedicineId?: Prisma.StringFilter<"OrderItem"> | string
-  quantity?: Prisma.IntFilter<"OrderItem"> | number
-  price?: Prisma.DecimalFilter<"OrderItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
-export type OrderItemCreateWithoutSellerMedicineInput = {
-  id?: string
-  quantity: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  order: Prisma.OrderCreateNestedOneWithoutOrderItemsInput
-}
-
-export type OrderItemUncheckedCreateWithoutSellerMedicineInput = {
+export type OrderItemCreateManyMedicineInput = {
   id?: string
   orderId: string
   quantity: number
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
-export type OrderItemCreateOrConnectWithoutSellerMedicineInput = {
-  where: Prisma.OrderItemWhereUniqueInput
-  create: Prisma.XOR<Prisma.OrderItemCreateWithoutSellerMedicineInput, Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput>
+export type OrderItemUpdateWithoutMedicineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutOrderItemsNestedInput
 }
 
-export type OrderItemCreateManySellerMedicineInputEnvelope = {
-  data: Prisma.OrderItemCreateManySellerMedicineInput | Prisma.OrderItemCreateManySellerMedicineInput[]
-  skipDuplicates?: boolean
+export type OrderItemUncheckedUpdateWithoutMedicineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type OrderItemUpsertWithWhereUniqueWithoutSellerMedicineInput = {
-  where: Prisma.OrderItemWhereUniqueInput
-  update: Prisma.XOR<Prisma.OrderItemUpdateWithoutSellerMedicineInput, Prisma.OrderItemUncheckedUpdateWithoutSellerMedicineInput>
-  create: Prisma.XOR<Prisma.OrderItemCreateWithoutSellerMedicineInput, Prisma.OrderItemUncheckedCreateWithoutSellerMedicineInput>
-}
-
-export type OrderItemUpdateWithWhereUniqueWithoutSellerMedicineInput = {
-  where: Prisma.OrderItemWhereUniqueInput
-  data: Prisma.XOR<Prisma.OrderItemUpdateWithoutSellerMedicineInput, Prisma.OrderItemUncheckedUpdateWithoutSellerMedicineInput>
-}
-
-export type OrderItemUpdateManyWithWhereWithoutSellerMedicineInput = {
-  where: Prisma.OrderItemScalarWhereInput
-  data: Prisma.XOR<Prisma.OrderItemUpdateManyMutationInput, Prisma.OrderItemUncheckedUpdateManyWithoutSellerMedicineInput>
+export type OrderItemUncheckedUpdateManyWithoutMedicineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderItemCreateManyOrderInput = {
   id?: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type OrderItemUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  sellerMedicine?: Prisma.SellerMedicineUpdateOneRequiredWithoutOrderItemsNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  medicine?: Prisma.MedicineUpdateOneRequiredWithoutOrderItemsNestedInput
 }
 
 export type OrderItemUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerMedicineId?: Prisma.StringFieldUpdateOperationsInput | string
+  medicineId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerMedicineId?: Prisma.StringFieldUpdateOperationsInput | string
+  medicineId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
-export type OrderItemCreateManySellerMedicineInput = {
-  id?: string
-  orderId: string
-  quantity: number
-  price: runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
-export type OrderItemUpdateWithoutSellerMedicineInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  order?: Prisma.OrderUpdateOneRequiredWithoutOrderItemsNestedInput
-}
-
-export type OrderItemUncheckedUpdateWithoutSellerMedicineInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
-export type OrderItemUncheckedUpdateManyWithoutSellerMedicineInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -611,67 +681,77 @@ export type OrderItemUncheckedUpdateManyWithoutSellerMedicineInput = {
 export type OrderItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
-  sellerMedicineId?: boolean
+  medicineId?: boolean
   quantity?: boolean
   price?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderItem"]>
 
 export type OrderItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
-  sellerMedicineId?: boolean
+  medicineId?: boolean
   quantity?: boolean
   price?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderItem"]>
 
 export type OrderItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
-  sellerMedicineId?: boolean
+  medicineId?: boolean
   quantity?: boolean
   price?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderItem"]>
 
 export type OrderItemSelectScalar = {
   id?: boolean
   orderId?: boolean
-  sellerMedicineId?: boolean
+  medicineId?: boolean
   quantity?: boolean
   price?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "sellerMedicineId" | "quantity" | "price", ExtArgs["result"]["orderItem"]>
+export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "medicineId" | "quantity" | "price" | "createdAt" | "updatedAt", ExtArgs["result"]["orderItem"]>
 export type OrderItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }
 export type OrderItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }
 export type OrderItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }
 
 export type $OrderItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OrderItem"
   objects: {
     order: Prisma.$OrderPayload<ExtArgs>
-    sellerMedicine: Prisma.$SellerMedicinePayload<ExtArgs>
+    medicine: Prisma.$MedicinePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     orderId: string
-    sellerMedicineId: string
+    medicineId: string
     quantity: number
     price: runtime.Decimal
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["orderItem"]>
   composites: {}
 }
@@ -1067,7 +1147,7 @@ readonly fields: OrderItemFieldRefs;
 export interface Prisma__OrderItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  sellerMedicine<T extends Prisma.SellerMedicineDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SellerMedicineDefaultArgs<ExtArgs>>): Prisma.Prisma__SellerMedicineClient<runtime.Types.Result.GetResult<Prisma.$SellerMedicinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  medicine<T extends Prisma.MedicineDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MedicineDefaultArgs<ExtArgs>>): Prisma.Prisma__MedicineClient<runtime.Types.Result.GetResult<Prisma.$MedicinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1099,9 +1179,11 @@ export interface Prisma__OrderItemClient<T, Null = never, ExtArgs extends runtim
 export interface OrderItemFieldRefs {
   readonly id: Prisma.FieldRef<"OrderItem", 'String'>
   readonly orderId: Prisma.FieldRef<"OrderItem", 'String'>
-  readonly sellerMedicineId: Prisma.FieldRef<"OrderItem", 'String'>
+  readonly medicineId: Prisma.FieldRef<"OrderItem", 'String'>
   readonly quantity: Prisma.FieldRef<"OrderItem", 'Int'>
   readonly price: Prisma.FieldRef<"OrderItem", 'Decimal'>
+  readonly createdAt: Prisma.FieldRef<"OrderItem", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"OrderItem", 'DateTime'>
 }
     
 

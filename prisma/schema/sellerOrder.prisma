@@ -3,16 +3,14 @@ model SellerOrder {
   orderId  String
   sellerId String
 
-  totalAmount Decimal @db.Decimal(10, 2)
-
-  status        OrderStatus   @default(PENDING)
-  paymentStatus PaymentStatus @default(PENDING)
+  totalAmount Decimal     @db.Decimal(10, 2)
+  status      OrderStatus
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  order  Order  @relation(fields: [orderId], references: [id])
+  seller Seller @relation(fields: [sellerId], references: [id])
 
   @@unique([orderId, sellerId])
   @@index([orderId], name: "seller_order_order_id_idx")

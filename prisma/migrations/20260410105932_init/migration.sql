@@ -1,8 +1,8 @@
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'PLACED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED');
+CREATE TYPE "OrderStatus" AS ENUM ('PLACED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'PAID');
+CREATE TYPE "PaymentStatus" AS ENUM ('UNPAID', 'PAID');
 
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('CUSTOMER', 'SELLER', 'ADMIN');
@@ -73,6 +73,8 @@ CREATE TABLE "verification" (
 CREATE TABLE "carts" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "carts_pkey" PRIMARY KEY ("id")
 );
@@ -81,8 +83,10 @@ CREATE TABLE "carts" (
 CREATE TABLE "cart_items" (
     "id" TEXT NOT NULL,
     "cartId" TEXT NOT NULL,
-    "sellerMedicineId" TEXT NOT NULL,
+    "medicineId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "cart_items_pkey" PRIMARY KEY ("id")
 );
@@ -114,9 +118,12 @@ CREATE TABLE "medicines" (
     "strength" TEXT,
     "dosageForm" TEXT,
     "imageUrl" TEXT,
+    "price" DECIMAL(65,30) NOT NULL DEFAULT 0.0,
+    "stock" INTEGER NOT NULL DEFAULT 0,
     "isAvailable" BOOLEAN NOT NULL DEFAULT true,
     "categoryId" TEXT NOT NULL,
     "manufacturerId" TEXT NOT NULL,
+    "sellerId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -128,10 +135,12 @@ CREATE TABLE "orders" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "totalAmount" DECIMAL(10,2) NOT NULL,
-    "shippingContactNumber" TEXT NOT NULL,
     "shippingAddress" TEXT NOT NULL,
-    "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
-    "paymentStatus" "PaymentStatus" NOT NULL DEFAULT 'PENDING',
+    "shippingCity" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "notes" TEXT,
+    "status" "OrderStatus" NOT NULL,
+    "paymentStatus" "PaymentStatus" NOT NULL DEFAULT 'UNPAID',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -142,9 +151,11 @@ CREATE TABLE "orders" (
 CREATE TABLE "order_items" (
     "id" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
-    "sellerMedicineId" TEXT NOT NULL,
+    "medicineId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
     "price" DECIMAL(10,2) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "order_items_pkey" PRIMARY KEY ("id")
 );
@@ -179,26 +190,12 @@ CREATE TABLE "sellers" (
 );
 
 -- CreateTable
-CREATE TABLE "seller_medicines" (
-    "id" TEXT NOT NULL,
-    "sellerId" TEXT NOT NULL,
-    "medicineId" TEXT NOT NULL,
-    "price" DECIMAL(10,2) NOT NULL,
-    "stock" INTEGER NOT NULL DEFAULT 0,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "seller_medicines_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "seller_orders" (
     "id" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
     "sellerId" TEXT NOT NULL,
     "totalAmount" DECIMAL(10,2) NOT NULL,
-    "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
-    "paymentStatus" "PaymentStatus" NOT NULL DEFAULT 'PENDING',
+    "status" "OrderStatus" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -242,10 +239,10 @@ CREATE INDEX "cart_user_id_idx" ON "carts"("userId");
 CREATE INDEX "cart_item_cart_id_idx" ON "cart_items"("cartId");
 
 -- CreateIndex
-CREATE INDEX "cart_item_seller_medicine_id_idx" ON "cart_items"("sellerMedicineId");
+CREATE INDEX "cart_item_medicine_id_idx" ON "cart_items"("medicineId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "cart_items_cartId_sellerMedicineId_key" ON "cart_items"("cartId", "sellerMedicineId");
+CREATE UNIQUE INDEX "cart_items_cartId_medicineId_key" ON "cart_items"("cartId", "medicineId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "categories_name_key" ON "categories"("name");
@@ -258,9 +255,6 @@ CREATE UNIQUE INDEX "manufacturers_name_key" ON "manufacturers"("name");
 
 -- CreateIndex
 CREATE INDEX "manufacturer_name_idx" ON "manufacturers"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "medicines_name_key" ON "medicines"("name");
 
 -- CreateIndex
 CREATE INDEX "medicine_name_idx" ON "medicines"("name");
@@ -287,10 +281,10 @@ CREATE INDEX "order_created_at_idx" ON "orders"("createdAt");
 CREATE INDEX "order_item_order_id_idx" ON "order_items"("orderId");
 
 -- CreateIndex
-CREATE INDEX "order_item_seller_medicine_id_idx" ON "order_items"("sellerMedicineId");
+CREATE INDEX "order_item_medicine_id_idx" ON "order_items"("medicineId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "order_items_orderId_sellerMedicineId_key" ON "order_items"("orderId", "sellerMedicineId");
+CREATE UNIQUE INDEX "order_items_orderId_medicineId_key" ON "order_items"("orderId", "medicineId");
 
 -- CreateIndex
 CREATE INDEX "review_user_id_idx" ON "reviews"("userId");
@@ -314,21 +308,6 @@ CREATE INDEX "seller_user_id_idx" ON "sellers"("userId");
 CREATE INDEX "seller_store_name_idx" ON "sellers"("storeName");
 
 -- CreateIndex
-CREATE INDEX "seller_medicine_seller_id_idx" ON "seller_medicines"("sellerId");
-
--- CreateIndex
-CREATE INDEX "seller_medicine_medicine_id_idx" ON "seller_medicines"("medicineId");
-
--- CreateIndex
-CREATE INDEX "seller_medicine_price_idx" ON "seller_medicines"("price");
-
--- CreateIndex
-CREATE INDEX "seller_medicine_stock_idx" ON "seller_medicines"("stock");
-
--- CreateIndex
-CREATE UNIQUE INDEX "seller_medicines_sellerId_medicineId_key" ON "seller_medicines"("sellerId", "medicineId");
-
--- CreateIndex
 CREATE INDEX "seller_order_order_id_idx" ON "seller_orders"("orderId");
 
 -- CreateIndex
@@ -347,13 +326,13 @@ ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "carts" ADD CONSTRAINT "carts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "carts" ADD CONSTRAINT "carts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "cart_items" ADD CONSTRAINT "cart_items_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "carts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "cart_items" ADD CONSTRAINT "cart_items_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "carts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "cart_items" ADD CONSTRAINT "cart_items_sellerMedicineId_fkey" FOREIGN KEY ("sellerMedicineId") REFERENCES "seller_medicines"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "cart_items" ADD CONSTRAINT "cart_items_medicineId_fkey" FOREIGN KEY ("medicineId") REFERENCES "medicines"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "medicines" ADD CONSTRAINT "medicines_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -362,31 +341,28 @@ ALTER TABLE "medicines" ADD CONSTRAINT "medicines_categoryId_fkey" FOREIGN KEY (
 ALTER TABLE "medicines" ADD CONSTRAINT "medicines_manufacturerId_fkey" FOREIGN KEY ("manufacturerId") REFERENCES "manufacturers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "orders" ADD CONSTRAINT "orders_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "medicines" ADD CONSTRAINT "medicines_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "sellers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "order_items" ADD CONSTRAINT "order_items_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "orders" ADD CONSTRAINT "orders_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "order_items" ADD CONSTRAINT "order_items_sellerMedicineId_fkey" FOREIGN KEY ("sellerMedicineId") REFERENCES "seller_medicines"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "order_items" ADD CONSTRAINT "order_items_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "order_items" ADD CONSTRAINT "order_items_medicineId_fkey" FOREIGN KEY ("medicineId") REFERENCES "medicines"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_medicineId_fkey" FOREIGN KEY ("medicineId") REFERENCES "medicines"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "sellers" ADD CONSTRAINT "sellers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_medicineId_fkey" FOREIGN KEY ("medicineId") REFERENCES "medicines"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "seller_medicines" ADD CONSTRAINT "seller_medicines_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "sellers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "sellers" ADD CONSTRAINT "sellers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "seller_medicines" ADD CONSTRAINT "seller_medicines_medicineId_fkey" FOREIGN KEY ("medicineId") REFERENCES "medicines"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "seller_orders" ADD CONSTRAINT "seller_orders_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "seller_orders" ADD CONSTRAINT "seller_orders_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "seller_orders" ADD CONSTRAINT "seller_orders_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "sellers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "seller_orders" ADD CONSTRAINT "seller_orders_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "sellers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

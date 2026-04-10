@@ -397,7 +397,6 @@ export const ModelName = {
   OrderItem: 'OrderItem',
   Review: 'Review',
   Seller: 'Seller',
-  SellerMedicine: 'SellerMedicine',
   SellerOrder: 'SellerOrder'
 } as const
 
@@ -414,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "cart" | "cartItem" | "category" | "manufacturer" | "medicine" | "order" | "orderItem" | "review" | "seller" | "sellerMedicine" | "sellerOrder"
+    modelProps: "user" | "session" | "account" | "verification" | "cart" | "cartItem" | "category" | "manufacturer" | "medicine" | "order" | "orderItem" | "review" | "seller" | "sellerOrder"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1380,80 +1379,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    SellerMedicine: {
-      payload: Prisma.$SellerMedicinePayload<ExtArgs>
-      fields: Prisma.SellerMedicineFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.SellerMedicineFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.SellerMedicineFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload>
-        }
-        findFirst: {
-          args: Prisma.SellerMedicineFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.SellerMedicineFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload>
-        }
-        findMany: {
-          args: Prisma.SellerMedicineFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload>[]
-        }
-        create: {
-          args: Prisma.SellerMedicineCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload>
-        }
-        createMany: {
-          args: Prisma.SellerMedicineCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.SellerMedicineCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload>[]
-        }
-        delete: {
-          args: Prisma.SellerMedicineDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload>
-        }
-        update: {
-          args: Prisma.SellerMedicineUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload>
-        }
-        deleteMany: {
-          args: Prisma.SellerMedicineDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.SellerMedicineUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.SellerMedicineUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload>[]
-        }
-        upsert: {
-          args: Prisma.SellerMedicineUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerMedicinePayload>
-        }
-        aggregate: {
-          args: Prisma.SellerMedicineAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSellerMedicine>
-        }
-        groupBy: {
-          args: Prisma.SellerMedicineGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SellerMedicineGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.SellerMedicineCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SellerMedicineCountAggregateOutputType> | number
-        }
-      }
-    }
     SellerOrder: {
       payload: Prisma.$SellerOrderPayload<ExtArgs>
       fields: Prisma.SellerOrderFieldRefs
@@ -1631,7 +1556,9 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 
 export const CartScalarFieldEnum = {
   id: 'id',
-  userId: 'userId'
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type CartScalarFieldEnum = (typeof CartScalarFieldEnum)[keyof typeof CartScalarFieldEnum]
@@ -1640,8 +1567,10 @@ export type CartScalarFieldEnum = (typeof CartScalarFieldEnum)[keyof typeof Cart
 export const CartItemScalarFieldEnum = {
   id: 'id',
   cartId: 'cartId',
-  sellerMedicineId: 'sellerMedicineId',
-  quantity: 'quantity'
+  medicineId: 'medicineId',
+  quantity: 'quantity',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type CartItemScalarFieldEnum = (typeof CartItemScalarFieldEnum)[keyof typeof CartItemScalarFieldEnum]
@@ -1673,9 +1602,12 @@ export const MedicineScalarFieldEnum = {
   strength: 'strength',
   dosageForm: 'dosageForm',
   imageUrl: 'imageUrl',
+  price: 'price',
+  stock: 'stock',
   isAvailable: 'isAvailable',
   categoryId: 'categoryId',
   manufacturerId: 'manufacturerId',
+  sellerId: 'sellerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1687,8 +1619,10 @@ export const OrderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   totalAmount: 'totalAmount',
-  shippingContactNumber: 'shippingContactNumber',
   shippingAddress: 'shippingAddress',
+  shippingCity: 'shippingCity',
+  phone: 'phone',
+  notes: 'notes',
   status: 'status',
   paymentStatus: 'paymentStatus',
   createdAt: 'createdAt',
@@ -1701,9 +1635,11 @@ export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof Or
 export const OrderItemScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
-  sellerMedicineId: 'sellerMedicineId',
+  medicineId: 'medicineId',
   quantity: 'quantity',
-  price: 'price'
+  price: 'price',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
@@ -1738,26 +1674,12 @@ export const SellerScalarFieldEnum = {
 export type SellerScalarFieldEnum = (typeof SellerScalarFieldEnum)[keyof typeof SellerScalarFieldEnum]
 
 
-export const SellerMedicineScalarFieldEnum = {
-  id: 'id',
-  sellerId: 'sellerId',
-  medicineId: 'medicineId',
-  price: 'price',
-  stock: 'stock',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SellerMedicineScalarFieldEnum = (typeof SellerMedicineScalarFieldEnum)[keyof typeof SellerMedicineScalarFieldEnum]
-
-
 export const SellerOrderScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
   sellerId: 'sellerId',
   totalAmount: 'totalAmount',
   status: 'status',
-  paymentStatus: 'paymentStatus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2021,7 +1943,6 @@ export type GlobalOmitConfig = {
   orderItem?: Prisma.OrderItemOmit
   review?: Prisma.ReviewOmit
   seller?: Prisma.SellerOmit
-  sellerMedicine?: Prisma.SellerMedicineOmit
   sellerOrder?: Prisma.SellerOrderOmit
 }
 

@@ -83,11 +83,6 @@ export type Review = Prisma.ReviewModel
  */
 export type Seller = Prisma.SellerModel
 /**
- * Model SellerMedicine
- * 
- */
-export type SellerMedicine = Prisma.SellerMedicineModel
-/**
  * Model SellerOrder
  * 
  */

@@ -1,16 +1,17 @@
 model OrderItem {
-  id               String @id @default(uuid(7))
-  orderId          String
-  sellerMedicineId String
+  id         String   @id @default(uuid(7))
+  orderId    String
+  medicineId String
+  quantity   Int
+  price      Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  quantity Int
-  price    Decimal @db.Decimal(10, 2)
+  order    Order    @relation(fields: [orderId], references: [id])
+  medicine Medicine @relation(fields: [medicineId], references: [id])
 
-  order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  sellerMedicine SellerMedicine @relation(fields: [sellerMedicineId], references: [id], onDelete: Restrict)
-
-  @@unique([orderId, sellerMedicineId])
+  @@unique([orderId, medicineId])
   @@index([orderId], name: "order_item_order_id_idx")
-  @@index([sellerMedicineId], name: "order_item_seller_medicine_id_idx")
+  @@index([medicineId], name: "order_item_medicine_id_idx")
   @@map("order_items")
 }

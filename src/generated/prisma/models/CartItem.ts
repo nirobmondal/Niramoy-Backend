@@ -37,22 +37,28 @@ export type CartItemSumAggregateOutputType = {
 export type CartItemMinAggregateOutputType = {
   id: string | null
   cartId: string | null
-  sellerMedicineId: string | null
+  medicineId: string | null
   quantity: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type CartItemMaxAggregateOutputType = {
   id: string | null
   cartId: string | null
-  sellerMedicineId: string | null
+  medicineId: string | null
   quantity: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type CartItemCountAggregateOutputType = {
   id: number
   cartId: number
-  sellerMedicineId: number
+  medicineId: number
   quantity: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -68,22 +74,28 @@ export type CartItemSumAggregateInputType = {
 export type CartItemMinAggregateInputType = {
   id?: true
   cartId?: true
-  sellerMedicineId?: true
+  medicineId?: true
   quantity?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type CartItemMaxAggregateInputType = {
   id?: true
   cartId?: true
-  sellerMedicineId?: true
+  medicineId?: true
   quantity?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type CartItemCountAggregateInputType = {
   id?: true
   cartId?: true
-  sellerMedicineId?: true
+  medicineId?: true
   quantity?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -176,8 +188,10 @@ export type CartItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type CartItemGroupByOutputType = {
   id: string
   cartId: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
+  createdAt: Date
+  updatedAt: Date
   _count: CartItemCountAggregateOutputType | null
   _avg: CartItemAvgAggregateOutputType | null
   _sum: CartItemSumAggregateOutputType | null
@@ -206,39 +220,47 @@ export type CartItemWhereInput = {
   NOT?: Prisma.CartItemWhereInput | Prisma.CartItemWhereInput[]
   id?: Prisma.StringFilter<"CartItem"> | string
   cartId?: Prisma.StringFilter<"CartItem"> | string
-  sellerMedicineId?: Prisma.StringFilter<"CartItem"> | string
+  medicineId?: Prisma.StringFilter<"CartItem"> | string
   quantity?: Prisma.IntFilter<"CartItem"> | number
+  createdAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
   cart?: Prisma.XOR<Prisma.CartScalarRelationFilter, Prisma.CartWhereInput>
-  sellerMedicine?: Prisma.XOR<Prisma.SellerMedicineScalarRelationFilter, Prisma.SellerMedicineWhereInput>
+  medicine?: Prisma.XOR<Prisma.MedicineScalarRelationFilter, Prisma.MedicineWhereInput>
 }
 
 export type CartItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   cartId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   cart?: Prisma.CartOrderByWithRelationInput
-  sellerMedicine?: Prisma.SellerMedicineOrderByWithRelationInput
+  medicine?: Prisma.MedicineOrderByWithRelationInput
 }
 
 export type CartItemWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  cartId_sellerMedicineId?: Prisma.CartItemCartIdSellerMedicineIdCompoundUniqueInput
+  cartId_medicineId?: Prisma.CartItemCartIdMedicineIdCompoundUniqueInput
   AND?: Prisma.CartItemWhereInput | Prisma.CartItemWhereInput[]
   OR?: Prisma.CartItemWhereInput[]
   NOT?: Prisma.CartItemWhereInput | Prisma.CartItemWhereInput[]
   cartId?: Prisma.StringFilter<"CartItem"> | string
-  sellerMedicineId?: Prisma.StringFilter<"CartItem"> | string
+  medicineId?: Prisma.StringFilter<"CartItem"> | string
   quantity?: Prisma.IntFilter<"CartItem"> | number
+  createdAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
   cart?: Prisma.XOR<Prisma.CartScalarRelationFilter, Prisma.CartWhereInput>
-  sellerMedicine?: Prisma.XOR<Prisma.SellerMedicineScalarRelationFilter, Prisma.SellerMedicineWhereInput>
-}, "id" | "cartId_sellerMedicineId">
+  medicine?: Prisma.XOR<Prisma.MedicineScalarRelationFilter, Prisma.MedicineWhereInput>
+}, "id" | "cartId_medicineId">
 
 export type CartItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   cartId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.CartItemCountOrderByAggregateInput
   _avg?: Prisma.CartItemAvgOrderByAggregateInput
   _max?: Prisma.CartItemMaxOrderByAggregateInput
@@ -252,55 +274,71 @@ export type CartItemScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CartItemScalarWhereWithAggregatesInput | Prisma.CartItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"CartItem"> | string
   cartId?: Prisma.StringWithAggregatesFilter<"CartItem"> | string
-  sellerMedicineId?: Prisma.StringWithAggregatesFilter<"CartItem"> | string
+  medicineId?: Prisma.StringWithAggregatesFilter<"CartItem"> | string
   quantity?: Prisma.IntWithAggregatesFilter<"CartItem"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"CartItem"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CartItem"> | Date | string
 }
 
 export type CartItemCreateInput = {
   id?: string
   quantity: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   cart: Prisma.CartCreateNestedOneWithoutCartItemsInput
-  sellerMedicine: Prisma.SellerMedicineCreateNestedOneWithoutCartItemsInput
+  medicine: Prisma.MedicineCreateNestedOneWithoutCartItemsInput
 }
 
 export type CartItemUncheckedCreateInput = {
   id?: string
   cartId: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CartItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cart?: Prisma.CartUpdateOneRequiredWithoutCartItemsNestedInput
-  sellerMedicine?: Prisma.SellerMedicineUpdateOneRequiredWithoutCartItemsNestedInput
+  medicine?: Prisma.MedicineUpdateOneRequiredWithoutCartItemsNestedInput
 }
 
 export type CartItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cartId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerMedicineId?: Prisma.StringFieldUpdateOperationsInput | string
+  medicineId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CartItemCreateManyInput = {
   id?: string
   cartId: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CartItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CartItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cartId?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerMedicineId?: Prisma.StringFieldUpdateOperationsInput | string
+  medicineId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CartItemListRelationFilter = {
@@ -313,16 +351,18 @@ export type CartItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type CartItemCartIdSellerMedicineIdCompoundUniqueInput = {
+export type CartItemCartIdMedicineIdCompoundUniqueInput = {
   cartId: string
-  sellerMedicineId: string
+  medicineId: string
 }
 
 export type CartItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cartId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type CartItemAvgOrderByAggregateInput = {
@@ -332,15 +372,19 @@ export type CartItemAvgOrderByAggregateInput = {
 export type CartItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cartId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type CartItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cartId?: Prisma.SortOrder
-  sellerMedicineId?: Prisma.SortOrder
+  medicineId?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type CartItemSumOrderByAggregateInput = {
@@ -397,58 +441,62 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type CartItemCreateNestedManyWithoutSellerMedicineInput = {
-  create?: Prisma.XOR<Prisma.CartItemCreateWithoutSellerMedicineInput, Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput> | Prisma.CartItemCreateWithoutSellerMedicineInput[] | Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput[]
-  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutSellerMedicineInput | Prisma.CartItemCreateOrConnectWithoutSellerMedicineInput[]
-  createMany?: Prisma.CartItemCreateManySellerMedicineInputEnvelope
+export type CartItemCreateNestedManyWithoutMedicineInput = {
+  create?: Prisma.XOR<Prisma.CartItemCreateWithoutMedicineInput, Prisma.CartItemUncheckedCreateWithoutMedicineInput> | Prisma.CartItemCreateWithoutMedicineInput[] | Prisma.CartItemUncheckedCreateWithoutMedicineInput[]
+  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutMedicineInput | Prisma.CartItemCreateOrConnectWithoutMedicineInput[]
+  createMany?: Prisma.CartItemCreateManyMedicineInputEnvelope
   connect?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
 }
 
-export type CartItemUncheckedCreateNestedManyWithoutSellerMedicineInput = {
-  create?: Prisma.XOR<Prisma.CartItemCreateWithoutSellerMedicineInput, Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput> | Prisma.CartItemCreateWithoutSellerMedicineInput[] | Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput[]
-  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutSellerMedicineInput | Prisma.CartItemCreateOrConnectWithoutSellerMedicineInput[]
-  createMany?: Prisma.CartItemCreateManySellerMedicineInputEnvelope
+export type CartItemUncheckedCreateNestedManyWithoutMedicineInput = {
+  create?: Prisma.XOR<Prisma.CartItemCreateWithoutMedicineInput, Prisma.CartItemUncheckedCreateWithoutMedicineInput> | Prisma.CartItemCreateWithoutMedicineInput[] | Prisma.CartItemUncheckedCreateWithoutMedicineInput[]
+  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutMedicineInput | Prisma.CartItemCreateOrConnectWithoutMedicineInput[]
+  createMany?: Prisma.CartItemCreateManyMedicineInputEnvelope
   connect?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
 }
 
-export type CartItemUpdateManyWithoutSellerMedicineNestedInput = {
-  create?: Prisma.XOR<Prisma.CartItemCreateWithoutSellerMedicineInput, Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput> | Prisma.CartItemCreateWithoutSellerMedicineInput[] | Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput[]
-  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutSellerMedicineInput | Prisma.CartItemCreateOrConnectWithoutSellerMedicineInput[]
-  upsert?: Prisma.CartItemUpsertWithWhereUniqueWithoutSellerMedicineInput | Prisma.CartItemUpsertWithWhereUniqueWithoutSellerMedicineInput[]
-  createMany?: Prisma.CartItemCreateManySellerMedicineInputEnvelope
+export type CartItemUpdateManyWithoutMedicineNestedInput = {
+  create?: Prisma.XOR<Prisma.CartItemCreateWithoutMedicineInput, Prisma.CartItemUncheckedCreateWithoutMedicineInput> | Prisma.CartItemCreateWithoutMedicineInput[] | Prisma.CartItemUncheckedCreateWithoutMedicineInput[]
+  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutMedicineInput | Prisma.CartItemCreateOrConnectWithoutMedicineInput[]
+  upsert?: Prisma.CartItemUpsertWithWhereUniqueWithoutMedicineInput | Prisma.CartItemUpsertWithWhereUniqueWithoutMedicineInput[]
+  createMany?: Prisma.CartItemCreateManyMedicineInputEnvelope
   set?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
   disconnect?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
   delete?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
   connect?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
-  update?: Prisma.CartItemUpdateWithWhereUniqueWithoutSellerMedicineInput | Prisma.CartItemUpdateWithWhereUniqueWithoutSellerMedicineInput[]
-  updateMany?: Prisma.CartItemUpdateManyWithWhereWithoutSellerMedicineInput | Prisma.CartItemUpdateManyWithWhereWithoutSellerMedicineInput[]
+  update?: Prisma.CartItemUpdateWithWhereUniqueWithoutMedicineInput | Prisma.CartItemUpdateWithWhereUniqueWithoutMedicineInput[]
+  updateMany?: Prisma.CartItemUpdateManyWithWhereWithoutMedicineInput | Prisma.CartItemUpdateManyWithWhereWithoutMedicineInput[]
   deleteMany?: Prisma.CartItemScalarWhereInput | Prisma.CartItemScalarWhereInput[]
 }
 
-export type CartItemUncheckedUpdateManyWithoutSellerMedicineNestedInput = {
-  create?: Prisma.XOR<Prisma.CartItemCreateWithoutSellerMedicineInput, Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput> | Prisma.CartItemCreateWithoutSellerMedicineInput[] | Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput[]
-  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutSellerMedicineInput | Prisma.CartItemCreateOrConnectWithoutSellerMedicineInput[]
-  upsert?: Prisma.CartItemUpsertWithWhereUniqueWithoutSellerMedicineInput | Prisma.CartItemUpsertWithWhereUniqueWithoutSellerMedicineInput[]
-  createMany?: Prisma.CartItemCreateManySellerMedicineInputEnvelope
+export type CartItemUncheckedUpdateManyWithoutMedicineNestedInput = {
+  create?: Prisma.XOR<Prisma.CartItemCreateWithoutMedicineInput, Prisma.CartItemUncheckedCreateWithoutMedicineInput> | Prisma.CartItemCreateWithoutMedicineInput[] | Prisma.CartItemUncheckedCreateWithoutMedicineInput[]
+  connectOrCreate?: Prisma.CartItemCreateOrConnectWithoutMedicineInput | Prisma.CartItemCreateOrConnectWithoutMedicineInput[]
+  upsert?: Prisma.CartItemUpsertWithWhereUniqueWithoutMedicineInput | Prisma.CartItemUpsertWithWhereUniqueWithoutMedicineInput[]
+  createMany?: Prisma.CartItemCreateManyMedicineInputEnvelope
   set?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
   disconnect?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
   delete?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
   connect?: Prisma.CartItemWhereUniqueInput | Prisma.CartItemWhereUniqueInput[]
-  update?: Prisma.CartItemUpdateWithWhereUniqueWithoutSellerMedicineInput | Prisma.CartItemUpdateWithWhereUniqueWithoutSellerMedicineInput[]
-  updateMany?: Prisma.CartItemUpdateManyWithWhereWithoutSellerMedicineInput | Prisma.CartItemUpdateManyWithWhereWithoutSellerMedicineInput[]
+  update?: Prisma.CartItemUpdateWithWhereUniqueWithoutMedicineInput | Prisma.CartItemUpdateWithWhereUniqueWithoutMedicineInput[]
+  updateMany?: Prisma.CartItemUpdateManyWithWhereWithoutMedicineInput | Prisma.CartItemUpdateManyWithWhereWithoutMedicineInput[]
   deleteMany?: Prisma.CartItemScalarWhereInput | Prisma.CartItemScalarWhereInput[]
 }
 
 export type CartItemCreateWithoutCartInput = {
   id?: string
   quantity: number
-  sellerMedicine: Prisma.SellerMedicineCreateNestedOneWithoutCartItemsInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  medicine: Prisma.MedicineCreateNestedOneWithoutCartItemsInput
 }
 
 export type CartItemUncheckedCreateWithoutCartInput = {
   id?: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CartItemCreateOrConnectWithoutCartInput = {
@@ -483,94 +531,116 @@ export type CartItemScalarWhereInput = {
   NOT?: Prisma.CartItemScalarWhereInput | Prisma.CartItemScalarWhereInput[]
   id?: Prisma.StringFilter<"CartItem"> | string
   cartId?: Prisma.StringFilter<"CartItem"> | string
-  sellerMedicineId?: Prisma.StringFilter<"CartItem"> | string
+  medicineId?: Prisma.StringFilter<"CartItem"> | string
   quantity?: Prisma.IntFilter<"CartItem"> | number
+  createdAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"CartItem"> | Date | string
 }
 
-export type CartItemCreateWithoutSellerMedicineInput = {
+export type CartItemCreateWithoutMedicineInput = {
   id?: string
   quantity: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   cart: Prisma.CartCreateNestedOneWithoutCartItemsInput
 }
 
-export type CartItemUncheckedCreateWithoutSellerMedicineInput = {
+export type CartItemUncheckedCreateWithoutMedicineInput = {
   id?: string
   cartId: string
   quantity: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
-export type CartItemCreateOrConnectWithoutSellerMedicineInput = {
+export type CartItemCreateOrConnectWithoutMedicineInput = {
   where: Prisma.CartItemWhereUniqueInput
-  create: Prisma.XOR<Prisma.CartItemCreateWithoutSellerMedicineInput, Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput>
+  create: Prisma.XOR<Prisma.CartItemCreateWithoutMedicineInput, Prisma.CartItemUncheckedCreateWithoutMedicineInput>
 }
 
-export type CartItemCreateManySellerMedicineInputEnvelope = {
-  data: Prisma.CartItemCreateManySellerMedicineInput | Prisma.CartItemCreateManySellerMedicineInput[]
+export type CartItemCreateManyMedicineInputEnvelope = {
+  data: Prisma.CartItemCreateManyMedicineInput | Prisma.CartItemCreateManyMedicineInput[]
   skipDuplicates?: boolean
 }
 
-export type CartItemUpsertWithWhereUniqueWithoutSellerMedicineInput = {
+export type CartItemUpsertWithWhereUniqueWithoutMedicineInput = {
   where: Prisma.CartItemWhereUniqueInput
-  update: Prisma.XOR<Prisma.CartItemUpdateWithoutSellerMedicineInput, Prisma.CartItemUncheckedUpdateWithoutSellerMedicineInput>
-  create: Prisma.XOR<Prisma.CartItemCreateWithoutSellerMedicineInput, Prisma.CartItemUncheckedCreateWithoutSellerMedicineInput>
+  update: Prisma.XOR<Prisma.CartItemUpdateWithoutMedicineInput, Prisma.CartItemUncheckedUpdateWithoutMedicineInput>
+  create: Prisma.XOR<Prisma.CartItemCreateWithoutMedicineInput, Prisma.CartItemUncheckedCreateWithoutMedicineInput>
 }
 
-export type CartItemUpdateWithWhereUniqueWithoutSellerMedicineInput = {
+export type CartItemUpdateWithWhereUniqueWithoutMedicineInput = {
   where: Prisma.CartItemWhereUniqueInput
-  data: Prisma.XOR<Prisma.CartItemUpdateWithoutSellerMedicineInput, Prisma.CartItemUncheckedUpdateWithoutSellerMedicineInput>
+  data: Prisma.XOR<Prisma.CartItemUpdateWithoutMedicineInput, Prisma.CartItemUncheckedUpdateWithoutMedicineInput>
 }
 
-export type CartItemUpdateManyWithWhereWithoutSellerMedicineInput = {
+export type CartItemUpdateManyWithWhereWithoutMedicineInput = {
   where: Prisma.CartItemScalarWhereInput
-  data: Prisma.XOR<Prisma.CartItemUpdateManyMutationInput, Prisma.CartItemUncheckedUpdateManyWithoutSellerMedicineInput>
+  data: Prisma.XOR<Prisma.CartItemUpdateManyMutationInput, Prisma.CartItemUncheckedUpdateManyWithoutMedicineInput>
 }
 
 export type CartItemCreateManyCartInput = {
   id?: string
-  sellerMedicineId: string
+  medicineId: string
   quantity: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type CartItemUpdateWithoutCartInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  sellerMedicine?: Prisma.SellerMedicineUpdateOneRequiredWithoutCartItemsNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  medicine?: Prisma.MedicineUpdateOneRequiredWithoutCartItemsNestedInput
 }
 
 export type CartItemUncheckedUpdateWithoutCartInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerMedicineId?: Prisma.StringFieldUpdateOperationsInput | string
+  medicineId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CartItemUncheckedUpdateManyWithoutCartInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  sellerMedicineId?: Prisma.StringFieldUpdateOperationsInput | string
+  medicineId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type CartItemCreateManySellerMedicineInput = {
+export type CartItemCreateManyMedicineInput = {
   id?: string
   cartId: string
   quantity: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
-export type CartItemUpdateWithoutSellerMedicineInput = {
+export type CartItemUpdateWithoutMedicineInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cart?: Prisma.CartUpdateOneRequiredWithoutCartItemsNestedInput
 }
 
-export type CartItemUncheckedUpdateWithoutSellerMedicineInput = {
+export type CartItemUncheckedUpdateWithoutMedicineInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cartId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type CartItemUncheckedUpdateManyWithoutSellerMedicineInput = {
+export type CartItemUncheckedUpdateManyWithoutMedicineInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   cartId?: Prisma.StringFieldUpdateOperationsInput | string
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -578,62 +648,72 @@ export type CartItemUncheckedUpdateManyWithoutSellerMedicineInput = {
 export type CartItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   cartId?: boolean
-  sellerMedicineId?: boolean
+  medicineId?: boolean
   quantity?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cartItem"]>
 
 export type CartItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   cartId?: boolean
-  sellerMedicineId?: boolean
+  medicineId?: boolean
   quantity?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cartItem"]>
 
 export type CartItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   cartId?: boolean
-  sellerMedicineId?: boolean
+  medicineId?: boolean
   quantity?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cartItem"]>
 
 export type CartItemSelectScalar = {
   id?: boolean
   cartId?: boolean
-  sellerMedicineId?: boolean
+  medicineId?: boolean
   quantity?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type CartItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cartId" | "sellerMedicineId" | "quantity", ExtArgs["result"]["cartItem"]>
+export type CartItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cartId" | "medicineId" | "quantity" | "createdAt" | "updatedAt", ExtArgs["result"]["cartItem"]>
 export type CartItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }
 export type CartItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }
 export type CartItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cart?: boolean | Prisma.CartDefaultArgs<ExtArgs>
-  sellerMedicine?: boolean | Prisma.SellerMedicineDefaultArgs<ExtArgs>
+  medicine?: boolean | Prisma.MedicineDefaultArgs<ExtArgs>
 }
 
 export type $CartItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CartItem"
   objects: {
     cart: Prisma.$CartPayload<ExtArgs>
-    sellerMedicine: Prisma.$SellerMedicinePayload<ExtArgs>
+    medicine: Prisma.$MedicinePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     cartId: string
-    sellerMedicineId: string
+    medicineId: string
     quantity: number
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["cartItem"]>
   composites: {}
 }
@@ -1029,7 +1109,7 @@ readonly fields: CartItemFieldRefs;
 export interface Prisma__CartItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   cart<T extends Prisma.CartDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CartDefaultArgs<ExtArgs>>): Prisma.Prisma__CartClient<runtime.Types.Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  sellerMedicine<T extends Prisma.SellerMedicineDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SellerMedicineDefaultArgs<ExtArgs>>): Prisma.Prisma__SellerMedicineClient<runtime.Types.Result.GetResult<Prisma.$SellerMedicinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  medicine<T extends Prisma.MedicineDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MedicineDefaultArgs<ExtArgs>>): Prisma.Prisma__MedicineClient<runtime.Types.Result.GetResult<Prisma.$MedicinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1061,8 +1141,10 @@ export interface Prisma__CartItemClient<T, Null = never, ExtArgs extends runtime
 export interface CartItemFieldRefs {
   readonly id: Prisma.FieldRef<"CartItem", 'String'>
   readonly cartId: Prisma.FieldRef<"CartItem", 'String'>
-  readonly sellerMedicineId: Prisma.FieldRef<"CartItem", 'String'>
+  readonly medicineId: Prisma.FieldRef<"CartItem", 'String'>
   readonly quantity: Prisma.FieldRef<"CartItem", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"CartItem", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"CartItem", 'DateTime'>
 }
     
 
