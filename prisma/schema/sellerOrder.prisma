@@ -4,7 +4,7 @@ model SellerOrder {
   sellerId String
 
   totalAmount Decimal     @db.Decimal(10, 2)
-  status      OrderStatus
+  orderItems  OrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -15,6 +15,5 @@ model SellerOrder {
   @@unique([orderId, sellerId])
   @@index([orderId], name: "seller_order_order_id_idx")
   @@index([sellerId], name: "seller_order_seller_id_idx")
-  @@index([status], name: "seller_order_status_idx")
   @@map("seller_orders")
 }
