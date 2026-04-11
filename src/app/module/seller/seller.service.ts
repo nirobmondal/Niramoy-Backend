@@ -1,5 +1,5 @@
 import status from "http-status";
-import { Role, Seller } from "../../../generated/prisma/client";
+import { OrderStatus, Role, Seller } from "../../../generated/prisma/client";
 import AppError from "../../errorHelpers/AppError";
 
 import { prisma } from "../../lib/prisma";
@@ -40,12 +40,21 @@ const createSellerProfile = async (payload: Seller): Promise<Seller> => {
 };
 
 const updateSellerProfile = async (
-  id: string,
+  userId: string,
   payload: Partial<Seller>,
 ): Promise<Seller> => {
+  const seller = await prisma.seller.findUnique({
+    where: {
+      userId,
+    },
+  });
+
+  if (!seller) {
+    throw new AppError(status.NOT_FOUND, "Seller profile not found");
+  }
   const sellerProfile = await prisma.seller.update({
     where: {
-      id,
+      id: seller.id,
     },
     data: {
       ...payload,
@@ -54,7 +63,64 @@ const updateSellerProfile = async (
   return sellerProfile;
 };
 
+const getSellerDashboard = async (userId: string) => {
+  const seller = await prisma.seller.findUnique({
+    where: {
+      userId,
+    },
+  });
+
+  if (!seller) {
+    throw new AppError(status.NOT_FOUND, "Seller profile not found");
+  }
+
+  const sellerId = seller.id;
+
+  const totalOrder = await prisma.sellerOrder.count({
+    where: {
+      sellerId,
+    },
+  });
+
+  const totalMedicine = await prisma.medicine.count({
+    where: {
+      sellerId,
+    },
+  });
+
+  const totalSales = await prisma.sellerOrder.count({
+    where: {
+      sellerId,
+      order: {
+        status: OrderStatus.DELIVERED,
+      },
+    },
+  });
+
+  const totalRevenueResult = await prisma.sellerOrder.aggregate({
+    where: {
+      sellerId,
+      order: {
+        status: OrderStatus.DELIVERED,
+      },
+    },
+    _sum: {
+      totalAmount: true,
+    },
+  });
+
+  const totalRevenue = totalRevenueResult._sum.totalAmount || 0;
+
+  return {
+    totalOrder,
+    totalMedicine,
+    totalSales,
+    totalRevenue,
+  };
+};
+
 export const sellerService = {
   createSellerProfile,
   updateSellerProfile,
+  getSellerDashboard,
 };

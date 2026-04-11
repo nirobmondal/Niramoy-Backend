@@ -6,6 +6,7 @@ import { medicineRoute } from "../module/medincine/medicine.route";
 import { cartRoute } from "../module/cart/cart.route";
 import { orderRoute } from "../module/order/order.route";
 import { reviewRoute } from "../module/review/review.route";
+import { adminRoute } from "../module/admin/admin.route";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use("/medicine", medicineRoute);
 router.use("/cart", cartRoute);
 router.use("/order", orderRoute);
 router.use("/review", reviewRoute);
+router.use("/admin", adminRoute);
 
 export const indexRoutes = router;
