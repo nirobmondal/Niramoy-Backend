@@ -47,7 +47,7 @@ app.get("/", async (req: Request, res: Response) => {
 app.all("/api/auth/*", toNodeHandler(auth));
 
 // custom routes
-app.use("api/v1", indexRoutes);
+app.use("/api/v1", indexRoutes);
 
 app.use(globalErrorHandler);
 app.use(notFound);
