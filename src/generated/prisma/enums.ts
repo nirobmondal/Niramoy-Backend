@@ -9,6 +9,23 @@
 * 🟢 You can import this file directly.
 */
 
+export const Role = {
+  CUSTOMER: 'CUSTOMER',
+  SELLER: 'SELLER',
+  ADMIN: 'ADMIN'
+} as const
+
+export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const UserStatus = {
+  ACTIVE: 'ACTIVE',
+  BANNED: 'BANNED'
+} as const
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
 export const OrderStatus = {
   PLACED: 'PLACED',
   PROCESSING: 'PROCESSING',
@@ -28,10 +45,8 @@ export const PaymentStatus = {
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
-export const Role = {
-  CUSTOMER: 'CUSTOMER',
-  SELLER: 'SELLER',
-  ADMIN: 'ADMIN'
+export const PaymentMethod = {
+  COD: 'COD'
 } as const
 
-export type Role = (typeof Role)[keyof typeof Role]
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]

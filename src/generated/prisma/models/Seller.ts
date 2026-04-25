@@ -27,12 +27,9 @@ export type AggregateSeller = {
 export type SellerMinAggregateOutputType = {
   id: string | null
   userId: string | null
-  storeName: string | null
-  description: string | null
-  contactNumber: string | null
-  address: string | null
-  openingTime: string | null
-  closingTime: string | null
+  shopName: string | null
+  shopAddress: string | null
+  shopPhone: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -40,12 +37,9 @@ export type SellerMinAggregateOutputType = {
 export type SellerMaxAggregateOutputType = {
   id: string | null
   userId: string | null
-  storeName: string | null
-  description: string | null
-  contactNumber: string | null
-  address: string | null
-  openingTime: string | null
-  closingTime: string | null
+  shopName: string | null
+  shopAddress: string | null
+  shopPhone: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,12 +47,9 @@ export type SellerMaxAggregateOutputType = {
 export type SellerCountAggregateOutputType = {
   id: number
   userId: number
-  storeName: number
-  description: number
-  contactNumber: number
-  address: number
-  openingTime: number
-  closingTime: number
+  shopName: number
+  shopAddress: number
+  shopPhone: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -68,12 +59,9 @@ export type SellerCountAggregateOutputType = {
 export type SellerMinAggregateInputType = {
   id?: true
   userId?: true
-  storeName?: true
-  description?: true
-  contactNumber?: true
-  address?: true
-  openingTime?: true
-  closingTime?: true
+  shopName?: true
+  shopAddress?: true
+  shopPhone?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -81,12 +69,9 @@ export type SellerMinAggregateInputType = {
 export type SellerMaxAggregateInputType = {
   id?: true
   userId?: true
-  storeName?: true
-  description?: true
-  contactNumber?: true
-  address?: true
-  openingTime?: true
-  closingTime?: true
+  shopName?: true
+  shopAddress?: true
+  shopPhone?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,12 +79,9 @@ export type SellerMaxAggregateInputType = {
 export type SellerCountAggregateInputType = {
   id?: true
   userId?: true
-  storeName?: true
-  description?: true
-  contactNumber?: true
-  address?: true
-  openingTime?: true
-  closingTime?: true
+  shopName?: true
+  shopAddress?: true
+  shopPhone?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -180,12 +162,9 @@ export type SellerGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type SellerGroupByOutputType = {
   id: string
   userId: string
-  storeName: string
-  description: string | null
-  contactNumber: string | null
-  address: string | null
-  openingTime: string | null
-  closingTime: string | null
+  shopName: string
+  shopAddress: string | null
+  shopPhone: string | null
   createdAt: Date
   updatedAt: Date
   _count: SellerCountAggregateOutputType | null
@@ -214,12 +193,9 @@ export type SellerWhereInput = {
   NOT?: Prisma.SellerWhereInput | Prisma.SellerWhereInput[]
   id?: Prisma.StringFilter<"Seller"> | string
   userId?: Prisma.StringFilter<"Seller"> | string
-  storeName?: Prisma.StringFilter<"Seller"> | string
-  description?: Prisma.StringNullableFilter<"Seller"> | string | null
-  contactNumber?: Prisma.StringNullableFilter<"Seller"> | string | null
-  address?: Prisma.StringNullableFilter<"Seller"> | string | null
-  openingTime?: Prisma.StringNullableFilter<"Seller"> | string | null
-  closingTime?: Prisma.StringNullableFilter<"Seller"> | string | null
+  shopName?: Prisma.StringFilter<"Seller"> | string
+  shopAddress?: Prisma.StringNullableFilter<"Seller"> | string | null
+  shopPhone?: Prisma.StringNullableFilter<"Seller"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -230,12 +206,9 @@ export type SellerWhereInput = {
 export type SellerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  storeName?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
-  contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrderInput | Prisma.SortOrder
-  openingTime?: Prisma.SortOrderInput | Prisma.SortOrder
-  closingTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  shopName?: Prisma.SortOrder
+  shopAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  shopPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -246,31 +219,25 @@ export type SellerOrderByWithRelationInput = {
 export type SellerWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   userId?: string
-  storeName?: string
   AND?: Prisma.SellerWhereInput | Prisma.SellerWhereInput[]
   OR?: Prisma.SellerWhereInput[]
   NOT?: Prisma.SellerWhereInput | Prisma.SellerWhereInput[]
-  description?: Prisma.StringNullableFilter<"Seller"> | string | null
-  contactNumber?: Prisma.StringNullableFilter<"Seller"> | string | null
-  address?: Prisma.StringNullableFilter<"Seller"> | string | null
-  openingTime?: Prisma.StringNullableFilter<"Seller"> | string | null
-  closingTime?: Prisma.StringNullableFilter<"Seller"> | string | null
+  shopName?: Prisma.StringFilter<"Seller"> | string
+  shopAddress?: Prisma.StringNullableFilter<"Seller"> | string | null
+  shopPhone?: Prisma.StringNullableFilter<"Seller"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Seller"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   medicines?: Prisma.MedicineListRelationFilter
   sellerOrders?: Prisma.SellerOrderListRelationFilter
-}, "id" | "userId" | "storeName">
+}, "id" | "userId">
 
 export type SellerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  storeName?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
-  contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrderInput | Prisma.SortOrder
-  openingTime?: Prisma.SortOrderInput | Prisma.SortOrder
-  closingTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  shopName?: Prisma.SortOrder
+  shopAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  shopPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SellerCountOrderByAggregateInput
@@ -284,27 +251,21 @@ export type SellerScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SellerScalarWhereWithAggregatesInput | Prisma.SellerScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Seller"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Seller"> | string
-  storeName?: Prisma.StringWithAggregatesFilter<"Seller"> | string
-  description?: Prisma.StringNullableWithAggregatesFilter<"Seller"> | string | null
-  contactNumber?: Prisma.StringNullableWithAggregatesFilter<"Seller"> | string | null
-  address?: Prisma.StringNullableWithAggregatesFilter<"Seller"> | string | null
-  openingTime?: Prisma.StringNullableWithAggregatesFilter<"Seller"> | string | null
-  closingTime?: Prisma.StringNullableWithAggregatesFilter<"Seller"> | string | null
+  shopName?: Prisma.StringWithAggregatesFilter<"Seller"> | string
+  shopAddress?: Prisma.StringNullableWithAggregatesFilter<"Seller"> | string | null
+  shopPhone?: Prisma.StringNullableWithAggregatesFilter<"Seller"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Seller"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Seller"> | Date | string
 }
 
 export type SellerCreateInput = {
   id?: string
-  storeName: string
-  description?: string | null
-  contactNumber?: string | null
-  address?: string | null
-  openingTime?: string | null
-  closingTime?: string | null
+  shopName: string
+  shopAddress?: string | null
+  shopPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutSellerInput
+  user: Prisma.UserCreateNestedOneWithoutSellerProfileInput
   medicines?: Prisma.MedicineCreateNestedManyWithoutSellerInput
   sellerOrders?: Prisma.SellerOrderCreateNestedManyWithoutSellerInput
 }
@@ -312,12 +273,9 @@ export type SellerCreateInput = {
 export type SellerUncheckedCreateInput = {
   id?: string
   userId: string
-  storeName: string
-  description?: string | null
-  contactNumber?: string | null
-  address?: string | null
-  openingTime?: string | null
-  closingTime?: string | null
+  shopName: string
+  shopAddress?: string | null
+  shopPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicines?: Prisma.MedicineUncheckedCreateNestedManyWithoutSellerInput
@@ -326,15 +284,12 @@ export type SellerUncheckedCreateInput = {
 
 export type SellerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutSellerNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutSellerProfileNestedInput
   medicines?: Prisma.MedicineUpdateManyWithoutSellerNestedInput
   sellerOrders?: Prisma.SellerOrderUpdateManyWithoutSellerNestedInput
 }
@@ -342,12 +297,9 @@ export type SellerUpdateInput = {
 export type SellerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUncheckedUpdateManyWithoutSellerNestedInput
@@ -357,24 +309,18 @@ export type SellerUncheckedUpdateInput = {
 export type SellerCreateManyInput = {
   id?: string
   userId: string
-  storeName: string
-  description?: string | null
-  contactNumber?: string | null
-  address?: string | null
-  openingTime?: string | null
-  closingTime?: string | null
+  shopName: string
+  shopAddress?: string | null
+  shopPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type SellerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -382,12 +328,9 @@ export type SellerUpdateManyMutationInput = {
 export type SellerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -405,12 +348,9 @@ export type SellerScalarRelationFilter = {
 export type SellerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  storeName?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  openingTime?: Prisma.SortOrder
-  closingTime?: Prisma.SortOrder
+  shopName?: Prisma.SortOrder
+  shopAddress?: Prisma.SortOrder
+  shopPhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -418,12 +358,9 @@ export type SellerCountOrderByAggregateInput = {
 export type SellerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  storeName?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  openingTime?: Prisma.SortOrder
-  closingTime?: Prisma.SortOrder
+  shopName?: Prisma.SortOrder
+  shopAddress?: Prisma.SortOrder
+  shopPhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -431,12 +368,9 @@ export type SellerMaxOrderByAggregateInput = {
 export type SellerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  storeName?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  openingTime?: Prisma.SortOrder
-  closingTime?: Prisma.SortOrder
+  shopName?: Prisma.SortOrder
+  shopAddress?: Prisma.SortOrder
+  shopPhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -503,12 +437,9 @@ export type SellerUpdateOneRequiredWithoutSellerOrdersNestedInput = {
 
 export type SellerCreateWithoutUserInput = {
   id?: string
-  storeName: string
-  description?: string | null
-  contactNumber?: string | null
-  address?: string | null
-  openingTime?: string | null
-  closingTime?: string | null
+  shopName: string
+  shopAddress?: string | null
+  shopPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicines?: Prisma.MedicineCreateNestedManyWithoutSellerInput
@@ -517,12 +448,9 @@ export type SellerCreateWithoutUserInput = {
 
 export type SellerUncheckedCreateWithoutUserInput = {
   id?: string
-  storeName: string
-  description?: string | null
-  contactNumber?: string | null
-  address?: string | null
-  openingTime?: string | null
-  closingTime?: string | null
+  shopName: string
+  shopAddress?: string | null
+  shopPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicines?: Prisma.MedicineUncheckedCreateNestedManyWithoutSellerInput
@@ -547,12 +475,9 @@ export type SellerUpdateToOneWithWhereWithoutUserInput = {
 
 export type SellerUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUpdateManyWithoutSellerNestedInput
@@ -561,12 +486,9 @@ export type SellerUpdateWithoutUserInput = {
 
 export type SellerUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUncheckedUpdateManyWithoutSellerNestedInput
@@ -575,27 +497,21 @@ export type SellerUncheckedUpdateWithoutUserInput = {
 
 export type SellerCreateWithoutMedicinesInput = {
   id?: string
-  storeName: string
-  description?: string | null
-  contactNumber?: string | null
-  address?: string | null
-  openingTime?: string | null
-  closingTime?: string | null
+  shopName: string
+  shopAddress?: string | null
+  shopPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutSellerInput
+  user: Prisma.UserCreateNestedOneWithoutSellerProfileInput
   sellerOrders?: Prisma.SellerOrderCreateNestedManyWithoutSellerInput
 }
 
 export type SellerUncheckedCreateWithoutMedicinesInput = {
   id?: string
   userId: string
-  storeName: string
-  description?: string | null
-  contactNumber?: string | null
-  address?: string | null
-  openingTime?: string | null
-  closingTime?: string | null
+  shopName: string
+  shopAddress?: string | null
+  shopPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerOrders?: Prisma.SellerOrderUncheckedCreateNestedManyWithoutSellerInput
@@ -619,27 +535,21 @@ export type SellerUpdateToOneWithWhereWithoutMedicinesInput = {
 
 export type SellerUpdateWithoutMedicinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutSellerNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutSellerProfileNestedInput
   sellerOrders?: Prisma.SellerOrderUpdateManyWithoutSellerNestedInput
 }
 
 export type SellerUncheckedUpdateWithoutMedicinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerOrders?: Prisma.SellerOrderUncheckedUpdateManyWithoutSellerNestedInput
@@ -647,27 +557,21 @@ export type SellerUncheckedUpdateWithoutMedicinesInput = {
 
 export type SellerCreateWithoutSellerOrdersInput = {
   id?: string
-  storeName: string
-  description?: string | null
-  contactNumber?: string | null
-  address?: string | null
-  openingTime?: string | null
-  closingTime?: string | null
+  shopName: string
+  shopAddress?: string | null
+  shopPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutSellerInput
+  user: Prisma.UserCreateNestedOneWithoutSellerProfileInput
   medicines?: Prisma.MedicineCreateNestedManyWithoutSellerInput
 }
 
 export type SellerUncheckedCreateWithoutSellerOrdersInput = {
   id?: string
   userId: string
-  storeName: string
-  description?: string | null
-  contactNumber?: string | null
-  address?: string | null
-  openingTime?: string | null
-  closingTime?: string | null
+  shopName: string
+  shopAddress?: string | null
+  shopPhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   medicines?: Prisma.MedicineUncheckedCreateNestedManyWithoutSellerInput
@@ -691,27 +595,21 @@ export type SellerUpdateToOneWithWhereWithoutSellerOrdersInput = {
 
 export type SellerUpdateWithoutSellerOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutSellerNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutSellerProfileNestedInput
   medicines?: Prisma.MedicineUpdateManyWithoutSellerNestedInput
 }
 
 export type SellerUncheckedUpdateWithoutSellerOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  storeName?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closingTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopName?: Prisma.StringFieldUpdateOperationsInput | string
+  shopAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUncheckedUpdateManyWithoutSellerNestedInput
@@ -760,12 +658,9 @@ export type SellerCountOutputTypeCountSellerOrdersArgs<ExtArgs extends runtime.T
 export type SellerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  storeName?: boolean
-  description?: boolean
-  contactNumber?: boolean
-  address?: boolean
-  openingTime?: boolean
-  closingTime?: boolean
+  shopName?: boolean
+  shopAddress?: boolean
+  shopPhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -777,12 +672,9 @@ export type SellerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type SellerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  storeName?: boolean
-  description?: boolean
-  contactNumber?: boolean
-  address?: boolean
-  openingTime?: boolean
-  closingTime?: boolean
+  shopName?: boolean
+  shopAddress?: boolean
+  shopPhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -791,12 +683,9 @@ export type SellerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type SellerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  storeName?: boolean
-  description?: boolean
-  contactNumber?: boolean
-  address?: boolean
-  openingTime?: boolean
-  closingTime?: boolean
+  shopName?: boolean
+  shopAddress?: boolean
+  shopPhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -805,17 +694,14 @@ export type SellerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type SellerSelectScalar = {
   id?: boolean
   userId?: boolean
-  storeName?: boolean
-  description?: boolean
-  contactNumber?: boolean
-  address?: boolean
-  openingTime?: boolean
-  closingTime?: boolean
+  shopName?: boolean
+  shopAddress?: boolean
+  shopPhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SellerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "storeName" | "description" | "contactNumber" | "address" | "openingTime" | "closingTime" | "createdAt" | "updatedAt", ExtArgs["result"]["seller"]>
+export type SellerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "shopName" | "shopAddress" | "shopPhone" | "createdAt" | "updatedAt", ExtArgs["result"]["seller"]>
 export type SellerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   medicines?: boolean | Prisma.Seller$medicinesArgs<ExtArgs>
@@ -839,12 +725,9 @@ export type $SellerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    storeName: string
-    description: string | null
-    contactNumber: string | null
-    address: string | null
-    openingTime: string | null
-    closingTime: string | null
+    shopName: string
+    shopAddress: string | null
+    shopPhone: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["seller"]>
@@ -1275,12 +1158,9 @@ export interface Prisma__SellerClient<T, Null = never, ExtArgs extends runtime.T
 export interface SellerFieldRefs {
   readonly id: Prisma.FieldRef<"Seller", 'String'>
   readonly userId: Prisma.FieldRef<"Seller", 'String'>
-  readonly storeName: Prisma.FieldRef<"Seller", 'String'>
-  readonly description: Prisma.FieldRef<"Seller", 'String'>
-  readonly contactNumber: Prisma.FieldRef<"Seller", 'String'>
-  readonly address: Prisma.FieldRef<"Seller", 'String'>
-  readonly openingTime: Prisma.FieldRef<"Seller", 'String'>
-  readonly closingTime: Prisma.FieldRef<"Seller", 'String'>
+  readonly shopName: Prisma.FieldRef<"Seller", 'String'>
+  readonly shopAddress: Prisma.FieldRef<"Seller", 'String'>
+  readonly shopPhone: Prisma.FieldRef<"Seller", 'String'>
   readonly createdAt: Prisma.FieldRef<"Seller", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Seller", 'DateTime'>
 }

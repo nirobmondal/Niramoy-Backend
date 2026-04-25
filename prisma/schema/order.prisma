@@ -1,21 +1,29 @@
 model Order {
-  id              String        @id @default(uuid(7))
-  userId          String
-  totalAmount     Decimal       @db.Decimal(10, 2)
+  id         String @id @default(uuid())
+  customerId String
+
+  totalAmount Decimal @db.Decimal(10, 2)
+
+  status        OrderStatus   @default(PLACED)
+  paymentMethod PaymentMethod @default(COD)
+  paymentStatus PaymentStatus @default(UNPAID)
+
+  shippingName    String
+  shippingPhone   String
   shippingAddress String
   shippingCity    String
-  phone           String
-  notes           String?
-  status          OrderStatus
-  paymentStatus   PaymentStatus @default(UNPAID)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
 
-  user         User          @relation(fields: [userId], references: [id])
+  note String?
+
+  customer     User          @relation(fields: [customerId], references: [id], onDelete: Restrict)
   sellerOrders SellerOrder[]
 
-  @@index([userId], name: "order_user_id_idx")
-  @@index([status], name: "order_status_idx")
-  @@index([createdAt], name: "order_created_at_idx")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([createdAt])
   @@map("orders")
 }

@@ -27,19 +27,25 @@ export type AggregateManufacturer = {
 export type ManufacturerMinAggregateOutputType = {
   id: string | null
   name: string | null
-  icon: string | null
+  country: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ManufacturerMaxAggregateOutputType = {
   id: string | null
   name: string | null
-  icon: string | null
+  country: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ManufacturerCountAggregateOutputType = {
   id: number
   name: number
-  icon: number
+  country: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -47,19 +53,25 @@ export type ManufacturerCountAggregateOutputType = {
 export type ManufacturerMinAggregateInputType = {
   id?: true
   name?: true
-  icon?: true
+  country?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ManufacturerMaxAggregateInputType = {
   id?: true
   name?: true
-  icon?: true
+  country?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ManufacturerCountAggregateInputType = {
   id?: true
   name?: true
-  icon?: true
+  country?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -138,7 +150,9 @@ export type ManufacturerGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type ManufacturerGroupByOutputType = {
   id: string
   name: string
-  icon: string | null
+  country: string | null
+  createdAt: Date
+  updatedAt: Date
   _count: ManufacturerCountAggregateOutputType | null
   _min: ManufacturerMinAggregateOutputType | null
   _max: ManufacturerMaxAggregateOutputType | null
@@ -165,14 +179,18 @@ export type ManufacturerWhereInput = {
   NOT?: Prisma.ManufacturerWhereInput | Prisma.ManufacturerWhereInput[]
   id?: Prisma.StringFilter<"Manufacturer"> | string
   name?: Prisma.StringFilter<"Manufacturer"> | string
-  icon?: Prisma.StringNullableFilter<"Manufacturer"> | string | null
+  country?: Prisma.StringNullableFilter<"Manufacturer"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Manufacturer"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Manufacturer"> | Date | string
   medicines?: Prisma.MedicineListRelationFilter
 }
 
 export type ManufacturerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  icon?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   medicines?: Prisma.MedicineOrderByRelationAggregateInput
 }
 
@@ -182,14 +200,18 @@ export type ManufacturerWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ManufacturerWhereInput | Prisma.ManufacturerWhereInput[]
   OR?: Prisma.ManufacturerWhereInput[]
   NOT?: Prisma.ManufacturerWhereInput | Prisma.ManufacturerWhereInput[]
-  icon?: Prisma.StringNullableFilter<"Manufacturer"> | string | null
+  country?: Prisma.StringNullableFilter<"Manufacturer"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Manufacturer"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Manufacturer"> | Date | string
   medicines?: Prisma.MedicineListRelationFilter
 }, "id" | "name">
 
 export type ManufacturerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  icon?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ManufacturerCountOrderByAggregateInput
   _max?: Prisma.ManufacturerMaxOrderByAggregateInput
   _min?: Prisma.ManufacturerMinOrderByAggregateInput
@@ -201,71 +223,93 @@ export type ManufacturerScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ManufacturerScalarWhereWithAggregatesInput | Prisma.ManufacturerScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Manufacturer"> | string
   name?: Prisma.StringWithAggregatesFilter<"Manufacturer"> | string
-  icon?: Prisma.StringNullableWithAggregatesFilter<"Manufacturer"> | string | null
+  country?: Prisma.StringNullableWithAggregatesFilter<"Manufacturer"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Manufacturer"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Manufacturer"> | Date | string
 }
 
 export type ManufacturerCreateInput = {
   id?: string
   name: string
-  icon?: string | null
+  country?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   medicines?: Prisma.MedicineCreateNestedManyWithoutManufacturerInput
 }
 
 export type ManufacturerUncheckedCreateInput = {
   id?: string
   name: string
-  icon?: string | null
+  country?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   medicines?: Prisma.MedicineUncheckedCreateNestedManyWithoutManufacturerInput
 }
 
 export type ManufacturerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUpdateManyWithoutManufacturerNestedInput
 }
 
 export type ManufacturerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.MedicineUncheckedUpdateManyWithoutManufacturerNestedInput
 }
 
 export type ManufacturerCreateManyInput = {
   id?: string
   name: string
-  icon?: string | null
+  country?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ManufacturerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ManufacturerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ManufacturerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ManufacturerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ManufacturerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ManufacturerScalarRelationFilter = {
@@ -290,13 +334,17 @@ export type ManufacturerUpdateOneRequiredWithoutMedicinesNestedInput = {
 export type ManufacturerCreateWithoutMedicinesInput = {
   id?: string
   name: string
-  icon?: string | null
+  country?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ManufacturerUncheckedCreateWithoutMedicinesInput = {
   id?: string
   name: string
-  icon?: string | null
+  country?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ManufacturerCreateOrConnectWithoutMedicinesInput = {
@@ -318,13 +366,17 @@ export type ManufacturerUpdateToOneWithWhereWithoutMedicinesInput = {
 export type ManufacturerUpdateWithoutMedicinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ManufacturerUncheckedUpdateWithoutMedicinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -361,7 +413,9 @@ export type ManufacturerCountOutputTypeCountMedicinesArgs<ExtArgs extends runtim
 export type ManufacturerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  icon?: boolean
+  country?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   medicines?: boolean | Prisma.Manufacturer$medicinesArgs<ExtArgs>
   _count?: boolean | Prisma.ManufacturerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["manufacturer"]>
@@ -369,22 +423,28 @@ export type ManufacturerSelect<ExtArgs extends runtime.Types.Extensions.Internal
 export type ManufacturerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  icon?: boolean
+  country?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["manufacturer"]>
 
 export type ManufacturerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  icon?: boolean
+  country?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["manufacturer"]>
 
 export type ManufacturerSelectScalar = {
   id?: boolean
   name?: boolean
-  icon?: boolean
+  country?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type ManufacturerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "icon", ExtArgs["result"]["manufacturer"]>
+export type ManufacturerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "country" | "createdAt" | "updatedAt", ExtArgs["result"]["manufacturer"]>
 export type ManufacturerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   medicines?: boolean | Prisma.Manufacturer$medicinesArgs<ExtArgs>
   _count?: boolean | Prisma.ManufacturerCountOutputTypeDefaultArgs<ExtArgs>
@@ -400,7 +460,9 @@ export type $ManufacturerPayload<ExtArgs extends runtime.Types.Extensions.Intern
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
-    icon: string | null
+    country: string | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["manufacturer"]>
   composites: {}
 }
@@ -827,7 +889,9 @@ export interface Prisma__ManufacturerClient<T, Null = never, ExtArgs extends run
 export interface ManufacturerFieldRefs {
   readonly id: Prisma.FieldRef<"Manufacturer", 'String'>
   readonly name: Prisma.FieldRef<"Manufacturer", 'String'>
-  readonly icon: Prisma.FieldRef<"Manufacturer", 'String'>
+  readonly country: Prisma.FieldRef<"Manufacturer", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Manufacturer", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Manufacturer", 'DateTime'>
 }
     
 

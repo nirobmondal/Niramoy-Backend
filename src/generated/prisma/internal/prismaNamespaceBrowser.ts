@@ -89,12 +89,11 @@ export const UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
-  role: 'role',
-  phone: 'phone',
-  address: 'address',
-  isBanned: 'isBanned',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  phone: 'phone',
+  role: 'role',
+  status: 'status'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -148,6 +147,7 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 export const CartScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  subtotal: 'subtotal',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -160,6 +160,7 @@ export const CartItemScalarFieldEnum = {
   cartId: 'cartId',
   medicineId: 'medicineId',
   quantity: 'quantity',
+  unitPrice: 'unitPrice',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -170,8 +171,9 @@ export type CartItemScalarFieldEnum = (typeof CartItemScalarFieldEnum)[keyof typ
 export const CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  icon: 'icon',
-  description: 'description'
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
@@ -180,7 +182,9 @@ export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typ
 export const ManufacturerScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  icon: 'icon'
+  country: 'country',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ManufacturerScalarFieldEnum = (typeof ManufacturerScalarFieldEnum)[keyof typeof ManufacturerScalarFieldEnum]
@@ -188,14 +192,18 @@ export type ManufacturerScalarFieldEnum = (typeof ManufacturerScalarFieldEnum)[k
 
 export const MedicineScalarFieldEnum = {
   id: 'id',
+  sku: 'sku',
   name: 'name',
   description: 'description',
-  strength: 'strength',
-  dosageForm: 'dosageForm',
-  imageUrl: 'imageUrl',
   price: 'price',
   stock: 'stock',
+  dosageForm: 'dosageForm',
+  strength: 'strength',
+  imageUrl: 'imageUrl',
   isAvailable: 'isAvailable',
+  isFeatured: 'isFeatured',
+  avgRating: 'avgRating',
+  reviewCount: 'reviewCount',
   categoryId: 'categoryId',
   manufacturerId: 'manufacturerId',
   sellerId: 'sellerId',
@@ -208,14 +216,16 @@ export type MedicineScalarFieldEnum = (typeof MedicineScalarFieldEnum)[keyof typ
 
 export const OrderScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
+  customerId: 'customerId',
   totalAmount: 'totalAmount',
+  status: 'status',
+  paymentMethod: 'paymentMethod',
+  paymentStatus: 'paymentStatus',
+  shippingName: 'shippingName',
+  shippingPhone: 'shippingPhone',
   shippingAddress: 'shippingAddress',
   shippingCity: 'shippingCity',
-  phone: 'phone',
-  notes: 'notes',
-  status: 'status',
-  paymentStatus: 'paymentStatus',
+  note: 'note',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -228,7 +238,7 @@ export const OrderItemScalarFieldEnum = {
   sellerOrderId: 'sellerOrderId',
   medicineId: 'medicineId',
   quantity: 'quantity',
-  price: 'price',
+  subtotal: 'subtotal',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -238,8 +248,9 @@ export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof t
 
 export const ReviewScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
+  customerId: 'customerId',
   medicineId: 'medicineId',
+  orderItemId: 'orderItemId',
   rating: 'rating',
   comment: 'comment',
   createdAt: 'createdAt',
@@ -252,12 +263,9 @@ export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof 
 export const SellerScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  storeName: 'storeName',
-  description: 'description',
-  contactNumber: 'contactNumber',
-  address: 'address',
-  openingTime: 'openingTime',
-  closingTime: 'closingTime',
+  shopName: 'shopName',
+  shopAddress: 'shopAddress',
+  shopPhone: 'shopPhone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -269,7 +277,7 @@ export const SellerOrderScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
   sellerId: 'sellerId',
-  totalAmount: 'totalAmount',
+  subtotal: 'subtotal',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

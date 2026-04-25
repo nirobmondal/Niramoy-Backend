@@ -1,17 +1,19 @@
 model OrderItem {
-  id            String   @id @default(uuid(7))
+  id            String @id @default(uuid())
   sellerOrderId String
   medicineId    String
-  quantity      Int
-  price         Decimal  @db.Decimal(10, 2)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 
-  medicine    Medicine    @relation(fields: [medicineId], references: [id])
-  sellerOrder SellerOrder @relation(fields: [sellerOrderId], references: [id])
+  quantity Int     @default(1)
+  subtotal Decimal @db.Decimal(10, 2)
+
+  sellerOrder SellerOrder @relation(fields: [sellerOrderId], references: [id], onDelete: Cascade)
+  medicine    Medicine    @relation(fields: [medicineId], references: [id], onDelete: Restrict)
+  review      Review?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([sellerOrderId, medicineId])
-  @@index([sellerOrderId], name: "order_item_seller_order_id_idx")
-  @@index([medicineId], name: "order_item_medicine_id_idx")
+  @@index([medicineId])
   @@map("order_items")
 }

@@ -1,16 +1,16 @@
 model CartItem {
-  id         String   @id @default(uuid(7))
+  id         String   @id @default(uuid())
   cartId     String
   medicineId String
-  quantity   Int
+  quantity   Int      @default(1)
+  unitPrice  Decimal  @db.Decimal(10, 2)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  cart     Cart     @relation(fields: [cartId], references: [id])
-  medicine Medicine @relation(fields: [medicineId], references: [id])
+  cart     Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  medicine Medicine @relation(fields: [medicineId], references: [id], onDelete: Restrict)
 
   @@unique([cartId, medicineId])
-  @@index([cartId], name: "cart_item_cart_id_idx")
-  @@index([medicineId], name: "cart_item_medicine_id_idx")
+  @@index([medicineId])
   @@map("cart_items")
 }

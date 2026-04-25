@@ -1,11 +1,12 @@
 model Category {
-  id          String  @id @default(uuid(7))
+  id          String  @id @default(uuid())
   name        String  @unique
-  icon        String?
   description String?
 
   medicines Medicine[]
 
-  @@index([name], name: "category_name_idx")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("categories")
 }

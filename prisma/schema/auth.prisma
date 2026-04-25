@@ -1,30 +1,27 @@
 model User {
-  id            String  @id
+  id            String    @id
   name          String
   email         String
-  emailVerified Boolean @default(false)
+  emailVerified Boolean   @default(false)
   image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
   // custom fields
-  role          Role    @default(CUSTOMER)
-  phone         String?
-  address       String?
-  isBanned      Boolean @default(false)
+  phone  String?
+  role   Role       @default(CUSTOMER)
+  status UserStatus @default(ACTIVE)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  sessions  Session[]
-  accounts  Account[]
-
-  // relations
-  seller  Seller?
-  cart    Cart?
-  orders  Order[]
-  reviews Review[]
+  sellerProfile Seller?
+  cart          Cart?
+  orders        Order[]
+  reviews       Review[]
 
   @@unique([email])
-  @@index([role], name: "user_role_idx")
-  @@index([isBanned], name: "user_is_banned_idx")
-  @@index([createdAt], name: "user_created_at_idx")
+  @@index([role])
+  @@index([status])
   @@map("user")
 }
 
@@ -60,7 +57,6 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
-  @@unique([providerId, accountId])
   @@index([userId])
   @@map("account")
 }

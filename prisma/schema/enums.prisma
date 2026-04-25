@@ -1,3 +1,14 @@
+enum Role {
+  CUSTOMER
+  SELLER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  BANNED
+}
+
 enum OrderStatus {
   PLACED
   PROCESSING
@@ -11,8 +22,6 @@ enum PaymentStatus {
   PAID
 }
 
-enum Role {
-  CUSTOMER
-  SELLER
-  ADMIN
+enum PaymentMethod {
+  COD
 }

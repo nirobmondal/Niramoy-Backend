@@ -1,31 +1,40 @@
 model Medicine {
-  id          String  @id @default(uuid(7))
+  id          String  @id @default(uuid())
+  sku         String  @unique
   name        String
   description String?
+  price       Decimal @db.Decimal(10, 2)
+  stock       Int     @default(0)
 
-  strength       String?
-  dosageForm     String?
-  imageUrl       String?
-  price          Decimal @default(0.0)
-  stock          Int     @default(0)
-  isAvailable    Boolean @default(true)
+  dosageForm String
+  strength   String
+
+  imageUrl    String?
+  isAvailable Boolean @default(true)
+  isFeatured  Boolean @default(false)
+
+  avgRating   Decimal @default(0) @db.Decimal(3, 2)
+  reviewCount Int     @default(0)
+
   categoryId     String
   manufacturerId String
   sellerId       String
 
+  category     Category     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  manufacturer Manufacturer @relation(fields: [manufacturerId], references: [id], onDelete: Restrict)
+  seller       Seller       @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+  reviews    Review[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  category     Category     @relation(fields: [categoryId], references: [id])
-  manufacturer Manufacturer @relation(fields: [manufacturerId], references: [id])
-  seller       Seller       @relation(fields: [sellerId], references: [id])
-  orderItems   OrderItem[]
-  cartItems    CartItem[]
-  reviews      Review[]
-
-  @@index([name], name: "medicine_name_idx")
-  @@index([categoryId], name: "medicine_category_id_idx")
-  @@index([manufacturerId], name: "medicine_manufacturer_id_idx")
-  @@index([isAvailable], name: "medicine_is_available_idx")
+  @@index([name])
+  @@index([categoryId])
+  @@index([sellerId])
+  @@index([manufacturerId])
+  @@index([isAvailable, isFeatured])
   @@map("medicines")
 }

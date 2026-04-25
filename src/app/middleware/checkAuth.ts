@@ -1,47 +1,124 @@
 import { NextFunction, Request, Response } from "express";
-import { auth as betterAuth } from "../lib/auth";
-import { Role } from "../../generated/prisma/enums";
+import status from "http-status";
+import { Role, UserStatus } from "../../generated/prisma/enums";
+import { envVars } from "../config/env";
+import AppError from "../errorHelpers/AppError";
+import { prisma } from "../lib/prisma";
+import { CookieUtils } from "../utils/cookie";
+import { jwtUtils } from "../utils/jwt";
 
-export const checkAuth = (...roles: Role[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    const session = await betterAuth.api.getSession({
-      headers: req.headers as any,
-    });
+export const checkAuth =
+  (...authRoles: Role[]) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //Session Token Verification
+      const sessionToken = CookieUtils.getCookie(
+        req,
+        "better-auth.session_token",
+      );
 
-    if (!session) {
-      res.status(401).json({
-        success: false,
-        message: "You are not authorized!",
-      });
-      return;
+      if (!sessionToken) {
+        throw new Error("Unauthorized access! No session token provided.");
+      }
+
+      if (sessionToken) {
+        const sessionExists = await prisma.session.findFirst({
+          where: {
+            token: sessionToken,
+            expiresAt: {
+              gt: new Date(),
+            },
+          },
+          include: {
+            user: true,
+          },
+        });
+
+        if (sessionExists && sessionExists.user) {
+          const user = sessionExists.user;
+
+          const now = new Date();
+          const expiresAt = new Date(sessionExists.expiresAt);
+          const createdAt = new Date(sessionExists.createdAt);
+
+          const sessionLifeTime = expiresAt.getTime() - createdAt.getTime();
+          const timeRemaining = expiresAt.getTime() - now.getTime();
+          const percentRemaining = (timeRemaining / sessionLifeTime) * 100;
+
+          if (percentRemaining < 20) {
+            res.setHeader("X-Session-Refresh", "true");
+            res.setHeader("X-Session-Expires-At", expiresAt.toISOString());
+            res.setHeader("X-Time-Remaining", timeRemaining.toString());
+
+            console.log("Session Expiring Soon!!");
+          }
+
+          if (user.status === UserStatus.BANNED) {
+            throw new AppError(
+              status.UNAUTHORIZED,
+              "Unauthorized access! User is not active.",
+            );
+          }
+
+          if (authRoles.length > 0 && !authRoles.includes(user.role)) {
+            throw new AppError(
+              status.FORBIDDEN,
+              "Forbidden access! You do not have permission to access this resource.",
+            );
+          }
+
+          req.user = {
+            userId: user.id,
+            name: user.name,
+            role: user.role,
+            email: user.email,
+          };
+        }
+
+        const accessToken = CookieUtils.getCookie(req, "accessToken");
+
+        if (!accessToken) {
+          throw new AppError(
+            status.UNAUTHORIZED,
+            "Unauthorized access! No access token provided.",
+          );
+        }
+      }
+
+      //Access Token Verification
+      const accessToken = CookieUtils.getCookie(req, "accessToken");
+
+      if (!accessToken) {
+        throw new AppError(
+          status.UNAUTHORIZED,
+          "Unauthorized access! No access token provided.",
+        );
+      }
+
+      const verifiedToken = jwtUtils.verifyToken(
+        accessToken,
+        envVars.ACCESS_TOKEN_SECRET,
+      );
+
+      if (!verifiedToken.success) {
+        throw new AppError(
+          status.UNAUTHORIZED,
+          "Unauthorized access! Invalid access token.",
+        );
+      }
+
+      if (
+        authRoles.length > 0 &&
+        !authRoles.includes(verifiedToken.data!.role as Role)
+      ) {
+        throw new AppError(
+          status.FORBIDDEN,
+          "Forbidden access! You do not have permission to access this resource.",
+        );
+      }
+
+      next();
+    } catch (error: any) {
+      next(error);
     }
-
-    // Check if user is banned
-    if (session.user.isBanned) {
-      res.status(403).json({
-        success: false,
-        message:
-          "Your account has been banned. Contact support for assistance.",
-      });
-      return;
-    }
-
-    req.user = {
-      userId: session.user.id,
-      role: session.user.role as Role,
-      name: session.user.name,
-      email: session.user.email,
-    };
-
-    if (roles.length && !roles.includes(req.user.role as Role)) {
-      res.status(403).json({
-        success: false,
-        message:
-          "Forbidden! You don't have permission to access this resource!",
-      });
-      return;
-    }
-
-    next();
   };
-};
