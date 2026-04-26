@@ -7,6 +7,8 @@ import { adminValidation } from "./admin.validation";
 
 const router = Router();
 
+router.get("/users", checkAuth(Role.ADMIN), adminController.getAllUsers);
+
 router.patch(
   "/users/:userId/status",
   checkAuth(Role.ADMIN),

@@ -16,10 +16,14 @@ router.post(
 router.get("/medicine/:medicineId", reviewController.getReviewsByMedicineId);
 router.patch(
   "/:id",
-  checkAuth(Role.CUSTOMER),
+  checkAuth(Role.CUSTOMER, Role.ADMIN),
   validateRequest(reviewValidation.updateReviewSchema),
   reviewController.updateReview,
 );
-router.delete("/:id", checkAuth(Role.CUSTOMER), reviewController.deleteReview);
+router.delete(
+  "/:id",
+  checkAuth(Role.CUSTOMER, Role.ADMIN),
+  reviewController.deleteReview,
+);
 
 export const reviewRoute = router;

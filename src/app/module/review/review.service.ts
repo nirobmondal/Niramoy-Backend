@@ -149,13 +149,14 @@ const getReviewsByMedicineId = async (medicineId: string) => {
 const updateReview = async (
   reviewId: string,
   userId: string,
+  role: Role,
   payload: IUpdateReviewPayload,
 ) => {
   const result = await prisma.$transaction(async (tx) => {
     const existingReview = await tx.review.findFirst({
       where: {
         id: reviewId,
-        customerId: userId,
+        ...(role === Role.ADMIN ? {} : { customerId: userId }),
       },
     });
 
@@ -190,12 +191,12 @@ const updateReview = async (
   return result;
 };
 
-const deleteReview = async (reviewId: string, userId: string) => {
+const deleteReview = async (reviewId: string, userId: string, role: Role) => {
   const result = await prisma.$transaction(async (tx) => {
     const existingReview = await tx.review.findFirst({
       where: {
         id: reviewId,
-        customerId: userId,
+        ...(role === Role.ADMIN ? {} : { customerId: userId }),
       },
     });
 

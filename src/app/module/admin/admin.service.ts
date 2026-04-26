@@ -3,6 +3,9 @@ import { Role, UserStatus } from "../../../generated/prisma/enums";
 import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import { IManageUserStatusPayload } from "./admin.interface";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { IQueryParams } from "../../interfaces/query.interface";
+import { User } from "../../../generated/prisma/client";
 
 const manageUserStatues = async (
   adminUserId: string,
@@ -75,6 +78,29 @@ const manageUserStatues = async (
   return updatedUser;
 };
 
+const getAllUsers = async (query: IQueryParams) => {
+  const result = await new QueryBuilder<User>(prisma.user, query, {
+    searchableFields: ["name"],
+    filterableFields: ["role", "status"],
+  })
+    .include({
+      sellerProfile: {
+        select: {
+          id: true,
+          shopName: true,
+        },
+      },
+    })
+    .search()
+    .filter()
+    .paginate()
+    .sort()
+    .execute();
+
+  return result;
+};
+
 export const adminService = {
   manageUserStatues,
+  getAllUsers,
 };

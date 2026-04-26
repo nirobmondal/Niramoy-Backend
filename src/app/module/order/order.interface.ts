@@ -1,6 +1,11 @@
 export interface ICreateOrderPayload {
+  shippingName: string;
+  shippingPhone: string;
   shippingAddress: string;
   shippingCity: string;
-  phone: string;
-  notes?: string;
+  note?: string;
+}
+
+export interface IUpdateOrderStatusPayload {
+  status: "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
 }

@@ -5,6 +5,11 @@
 - Seller Module
 - Manufacturer Module
 - Category Module
+- Medicine Module
+- Cart Module
+- Order Module
+- Review Module
+- Stats Module
 
 Create a Postman environment with these variables:
 
@@ -19,6 +24,10 @@ Create a Postman environment with these variables:
 - `userIdToBan`: `<set-after-user-created>`
 - `manufacturerId`: `<set-after-create>`
 - `categoryId`: `<set-after-create>`
+- `medicineId`: `<set-after-create>`
+- `orderId`: `<set-after-order-create>`
+- `orderItemId`: `<set-after-order-create>`
+- `reviewId`: `<set-after-review-create>`
 
 Important:
 
@@ -215,7 +224,18 @@ Seller update shape (seller only):
 
 ## 3. Admin APIs
 
-### 3.1 Ban or Activate User
+### 3.1 Get All Users (Admin only)
+
+- Method: `GET`
+- URL: `{{baseUrl}}/admin/users`
+- Auth: admin cookies
+- Query examples:
+
+```text
+?searchTerm=rahim&role=CUSTOMER&status=ACTIVE&page=1&limit=10&sortBy=createdAt&sortOrder=desc
+```
+
+### 3.2 Ban or Activate User
 
 - Method: `PATCH`
 - URL: `{{baseUrl}}/admin/users/:userId/status`
@@ -562,24 +582,227 @@ Behavior:
 - `price` becomes `0`.
 - `isFeatured` becomes `false`.
 
-## 8. Suggested Postman Test Flow
+## 8. Cart APIs
 
-1. Register customer
-2. Verify customer email OTP
-3. Login as customer
-4. Create seller profile
-5. Register/login as admin
-6. Create manufacturer
-7. Create category
-8. Update manufacturer/category
-9. Ban a normal user as admin
-10. Try protected API using banned user and verify failure
-11. Activate user again and verify login/access works
+### 8.1 Add To Cart (Customer only)
 
-## 9. Validation and Security Notes
+- Method: `POST`
+- URL: `{{baseUrl}}/cart`
+- Auth: customer cookies
+- Body:
 
-- Zod validation is enabled for all create/update payloads in admin/seller/manufacturer/category/auth modules.
-- Protected routes use `checkAuth(...)` and role enforcement.
-- Banned users are blocked at middleware level and in key service checks.
-- Deletion safety checks prevent deleting category/manufacturer when medicines depend on them.
-- Status update to `BANNED` removes all user sessions immediately.
+```json
+{
+  "medicineId": "{{medicineId}}",
+  "quantity": 2
+}
+```
+
+Notes:
+
+- If cart does not exist, it will be created.
+- If same medicine exists, quantity is incremented.
+- Stock and availability are validated before update.
+
+### 8.2 Get Cart (Customer only)
+
+- Method: `GET`
+- URL: `{{baseUrl}}/cart`
+
+### 8.3 Update Cart Item Quantity (Customer only)
+
+- Method: `PATCH`
+- URL: `{{baseUrl}}/cart`
+- Body with direct set:
+
+```json
+{
+  "medicineId": "{{medicineId}}",
+  "quantity": 3
+}
+```
+
+- Body with incremental/decremental update:
+
+```json
+{
+  "medicineId": "{{medicineId}}",
+  "quantityChange": -1
+}
+```
+
+Note: if resulting quantity is `0` or below, the cart item is removed.
+
+### 8.4 Remove Cart Item (Customer only)
+
+- Method: `DELETE`
+- URL: `{{baseUrl}}/cart/:medicineId`
+
+### 8.5 Clear Cart (Customer only)
+
+- Method: `DELETE`
+- URL: `{{baseUrl}}/cart`
+
+## 9. Order APIs
+
+### 9.1 Create Order From Cart (Customer only)
+
+- Method: `POST`
+- URL: `{{baseUrl}}/order`
+- Auth: customer cookies
+- Body:
+
+```json
+{
+  "shippingName": "Customer One",
+  "shippingPhone": "+8801712345678",
+  "shippingAddress": "House 10, Road 12",
+  "shippingCity": "Dhaka",
+  "note": "Deliver in evening"
+}
+```
+
+Behavior:
+
+- Validates all cart medicines for stock and availability.
+- Creates one parent order with multiple seller orders.
+- Creates order items for each seller group.
+- Clears cart and resets cart subtotal.
+
+### 9.2 Get Orders (Combined role-based endpoint)
+
+- Method: `GET`
+- URL: `{{baseUrl}}/order`
+- Auth: admin/customer/seller cookies
+
+Role behavior:
+
+- Admin sees all orders.
+- Customer sees own orders.
+- Seller sees only orders containing seller items.
+
+Query examples:
+
+```text
+?status=PLACED&paymentStatus=UNPAID&sellerOrders.seller.shopName=Good%20Health&page=1&limit=10
+```
+
+Seller-focused query example:
+
+```text
+?customer.name=Customer%20One&status=PROCESSING&page=1&limit=10
+```
+
+### 9.3 Get Order By Id (Customer or Admin)
+
+- Method: `GET`
+- URL: `{{baseUrl}}/order/:id`
+
+### 9.4 Cancel Order (Customer only)
+
+- Method: `PATCH`
+- URL: `{{baseUrl}}/order/:id/cancel`
+
+Rule:
+
+- Only `PLACED` orders can be cancelled by customer.
+
+### 9.5 Update Order Status (Seller only)
+
+- Method: `PATCH`
+- URL: `{{baseUrl}}/order/:id/status`
+- Body:
+
+```json
+{
+  "status": "PROCESSING"
+}
+```
+
+Allowed status transitions:
+
+- `PLACED -> PROCESSING`
+- `PROCESSING -> SHIPPED` or `PROCESSING -> CANCELLED`
+- `SHIPPED -> DELIVERED`
+
+## 10. Review APIs
+
+### 10.1 Create Review (Customer only)
+
+- Method: `POST`
+- URL: `{{baseUrl}}/review`
+- Body:
+
+```json
+{
+  "orderItemId": "{{orderItemId}}",
+  "rating": 5,
+  "comment": "Great medicine"
+}
+```
+
+Rules:
+
+- Customer must own the order item.
+- Related order status must be `DELIVERED`.
+- One review per order item.
+
+### 10.2 Get Reviews By Medicine Id (Public)
+
+- Method: `GET`
+- URL: `{{baseUrl}}/review/medicine/:medicineId`
+
+### 10.3 Update Review (Customer own or Admin any)
+
+- Method: `PATCH`
+- URL: `{{baseUrl}}/review/:id`
+- Auth: customer/admin cookies
+
+### 10.4 Delete Review (Customer own or Admin any)
+
+- Method: `DELETE`
+- URL: `{{baseUrl}}/review/:id`
+- Auth: customer/admin cookies
+
+Note:
+
+- After create/update/delete, medicine average rating and review count are recalculated.
+
+## 11. Stats APIs
+
+### 11.1 Get Dashboard Stats (Role based)
+
+- Method: `GET`
+- URL: `{{baseUrl}}/stats/dashboard`
+- Auth: customer/seller/admin cookies
+
+Role outputs:
+
+- Customer: total order count, total amount spent, total medicine bought.
+- Seller: total order count, total sales (delivered), total amount earned/revenue, total medicine sold.
+- Admin: total users, role-wise user counts, total orders, platform amount earned.
+
+## 12. Suggested Postman Test Flow
+
+1. Register and verify one customer.
+2. Login as admin and create manufacturer + category.
+3. Create seller profile and login as seller.
+4. Create medicine as seller and save `medicineId`.
+5. Login as customer and add medicine to cart.
+6. Place order from cart and save `orderId` and `orderItemId`.
+7. Seller updates order status to `PROCESSING`, then `SHIPPED`, then `DELIVERED`.
+8. Customer creates review for `orderItemId`.
+9. Customer/admin updates and deletes review and verify medicine rating changes.
+10. Verify role-based `/order` endpoint with admin, customer, seller cookies.
+11. Verify `/stats/dashboard` for each role.
+12. Test admin user moderation (`GET /admin/users`, `PATCH /admin/users/:userId/status`).
+
+## 13. Validation and Security Notes
+
+- Zod validation is enabled for create/update payloads across auth/admin/order/cart/review modules.
+- Protected routes enforce role checks with `checkAuth(...)`.
+- Cart and order flows validate medicine availability and stock.
+- Order placement and cancellation operations are transaction-based to keep data consistent.
+- Order status updates enforce strict transition flow.
+- Review creation enforces verified purchase and delivered-order checks.
+- Review create/update/delete keeps medicine `avgRating` and `reviewCount` synchronized.
