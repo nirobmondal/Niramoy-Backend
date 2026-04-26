@@ -7,6 +7,7 @@ import { Request, Response } from "express";
 const createManufacturer = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
   const result = await manufacturerService.createManufacturer(payload);
+
   sendResponse(res, {
     httpStatusCode: status.CREATED,
     success: true,
@@ -15,12 +16,13 @@ const createManufacturer = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllManufacturer = catchAsync(async (req: Request, res: Response) => {
+const getAllManufacturer = catchAsync(async (_req: Request, res: Response) => {
   const result = await manufacturerService.getAllManufacturer();
+
   sendResponse(res, {
     httpStatusCode: status.OK,
     success: true,
-    message: "Manufacturer retrieved successfully",
+    message: "Manufacturers retrieved successfully",
     data: result,
   });
 });
@@ -32,6 +34,7 @@ const updateManufacturer = catchAsync(async (req: Request, res: Response) => {
     id as string,
     payload,
   );
+
   sendResponse(res, {
     httpStatusCode: status.OK,
     success: true,
@@ -43,6 +46,7 @@ const updateManufacturer = catchAsync(async (req: Request, res: Response) => {
 const deleteManufacturer = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await manufacturerService.deleteManufacturer(id as string);
+
   sendResponse(res, {
     httpStatusCode: status.OK,
     success: true,

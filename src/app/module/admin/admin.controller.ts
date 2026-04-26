@@ -4,31 +4,24 @@ import { sendResponse } from "../../shared/sendResponse";
 import { adminService } from "./admin.service";
 import status from "http-status";
 
-const getAdminDashboard = catchAsync(async (req: Request, res: Response) => {
-  const dashboardData = await adminService.getAdminDashboard();
-
-  sendResponse(res, {
-    httpStatusCode: status.OK,
-    success: true,
-    message: "Admin dashboard data retrieved successfully",
-    data: dashboardData,
-  });
-});
-
-const banUnbanUser = catchAsync(async (req: Request, res: Response) => {
+const manageUserStatues = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const { isBanned } = req.body;
+  const payload = req.body;
 
-  await adminService.banUnbanUser(userId as string, isBanned);
+  const result = await adminService.manageUserStatues(
+    req.user.userId,
+    userId as string,
+    payload,
+  );
 
   sendResponse(res, {
     httpStatusCode: status.OK,
     success: true,
-    message: `User has been ${isBanned ? "banned" : "unbanned"} successfully`,
+    message: "User status updated successfully",
+    data: result,
   });
 });
 
 export const adminController = {
-  getAdminDashboard,
-  banUnbanUser,
+  manageUserStatues,
 };
