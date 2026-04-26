@@ -1,4 +1,5 @@
 export interface ICreateReviewPayload {
+  orderItemId: string;
   rating: number;
   comment?: string;
 }

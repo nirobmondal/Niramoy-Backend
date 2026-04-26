@@ -1,3 +1,10 @@
-export interface IAddToCartPayload {}
+export interface IAddToCartPayload {
+  medicineId: string;
+  quantity: number;
+}
 
-export interface IUpdateCartPayload {}
+export interface IUpdateCartPayload {
+  medicineId: string;
+  quantity?: number;
+  quantityChange?: number;
+}

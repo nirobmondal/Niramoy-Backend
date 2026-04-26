@@ -119,7 +119,6 @@ export class QueryBuilder<
       "sortBy",
       "sortOrder",
       "fields",
-      "includes",
       "include",
     ];
 
@@ -363,7 +362,7 @@ export class QueryBuilder<
       }
     });
 
-    const includeParam = this.queryParams.includes as string | undefined;
+    const includeParam = this.queryParams.include as string | undefined;
 
     if (includeParam && typeof includeParam === "string") {
       const requestedRelations = includeParam

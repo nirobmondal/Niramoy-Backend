@@ -8,7 +8,7 @@ const addToCart = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.user;
   const payload = req.body;
 
-  const result = await cartService.addToCart(userId, payload);
+  const result = await cartService.addToCart(userId as string, payload);
   sendResponse(res, {
     httpStatusCode: status.OK,
     success: true,
@@ -33,7 +33,7 @@ const updateCartItem = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.user;
   const payload = req.body;
 
-  const result = await cartService.updateCartItem(userId, payload);
+  const result = await cartService.updateCartItem(userId as string, payload);
   sendResponse(res, {
     httpStatusCode: status.OK,
     success: true,
@@ -46,7 +46,10 @@ const deleteCartItem = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.user;
   const { medicineId } = req.params;
 
-  const result = await cartService.deleteCartItem(userId, medicineId as string);
+  const result = await cartService.deleteCartItem(
+    userId as string,
+    medicineId as string,
+  );
   sendResponse(res, {
     httpStatusCode: status.OK,
     success: true,
@@ -58,7 +61,7 @@ const deleteCartItem = catchAsync(async (req: Request, res: Response) => {
 const clearCart = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.user;
 
-  const result = await cartService.clearCart(userId);
+  const result = await cartService.clearCart(userId as string);
   sendResponse(res, {
     httpStatusCode: status.OK,
     success: true,
