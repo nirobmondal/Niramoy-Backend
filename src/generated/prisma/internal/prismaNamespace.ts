@@ -1601,7 +1601,6 @@ export type ManufacturerScalarFieldEnum = (typeof ManufacturerScalarFieldEnum)[k
 
 export const MedicineScalarFieldEnum = {
   id: 'id',
-  sku: 'sku',
   name: 'name',
   description: 'description',
   price: 'price',

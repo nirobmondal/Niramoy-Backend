@@ -1,14 +1,10 @@
 # Postman Testing Guide
 
-This guide covers all APIs currently implemented in this backend:
-
 - Auth Module
 - Admin Module
 - Seller Module
 - Manufacturer Module
 - Category Module
-
-## 1. Environment Setup
 
 Create a Postman environment with these variables:
 
@@ -416,7 +412,157 @@ Error response example (medicine exists under this category):
 }
 ```
 
-## 7. Suggested Postman Test Flow
+## 7. Medicine APIs
+
+### 7.1 Create Medicine
+
+- Method: `POST`
+- URL: `{{baseUrl}}/medicine`
+- Auth: seller cookies
+- Body: `form-data`
+- Key `file`: optional medicine image
+- Key `data`: JSON string
+
+```json
+{
+  "name": "Paracetamol 500mg",
+  "description": "Pain relief and fever reducer",
+  "price": 25,
+  "stock": 100,
+  "dosageForm": "Tablet",
+  "strength": "500mg",
+  "categoryId": "<category-uuid>",
+  "manufacturerId": "<manufacturer-uuid>",
+  "isAvailable": true,
+  "isFeatured": false
+}
+```
+
+Success response example:
+
+```json
+{
+  "success": true,
+  "message": "Medicine created successfully",
+  "data": {
+    "id": "medicine-id"
+  }
+}
+```
+
+Error response example (invalid seller):
+
+```json
+{
+  "success": false,
+  "message": "Seller profile not found"
+}
+```
+
+### 7.2 Get All Medicines
+
+- Method: `GET`
+- URL: `{{baseUrl}}/medicine`
+- Public API
+
+Query examples:
+
+```text
+?searchTerm=para&categoryId=<category-uuid>&manufacturerId=<manufacturer-uuid>&price[gte]=10&price[lte]=50&sortBy=price&sortOrder=asc&page=1&limit=10
+```
+
+Success response example:
+
+```json
+{
+  "success": true,
+  "message": "Medicines fetched successfully",
+  "data": {
+    "data": [],
+    "meta": {
+      "page": 1,
+      "limit": 10,
+      "total": 0,
+      "totalPages": 0
+    }
+  }
+}
+```
+
+### 7.3 Get Medicine By Id
+
+- Method: `GET`
+- URL: `{{baseUrl}}/medicine/:id`
+- Public API
+
+Success response example:
+
+```json
+{
+  "success": true,
+  "message": "Medicine fetched successfully",
+  "data": {
+    "id": "medicine-id",
+    "name": "Paracetamol 500mg"
+  }
+}
+```
+
+### 7.4 Get Medicines By Seller
+
+- Method: `GET`
+- URL: `{{baseUrl}}/medicine/seller`
+- Auth: seller cookies
+- Query examples:
+
+```text
+?searchTerm=para&isAvailable=true&isFeatured=false&sortBy=createdAt&sortOrder=desc&page=1&limit=10
+```
+
+### 7.5 Update Medicine
+
+- Method: `PATCH`
+- URL: `{{baseUrl}}/medicine/:id`
+- Auth: seller cookies
+- Body: `form-data` or `raw JSON`
+
+```json
+{
+  "name": "Paracetamol 650mg",
+  "price": 30,
+  "stock": 80,
+  "isFeatured": true
+}
+```
+
+Success response example:
+
+```json
+{
+  "success": true,
+  "message": "Medicine updated successfully",
+  "data": {
+    "id": "medicine-id",
+    "name": "Paracetamol 650mg"
+  }
+}
+```
+
+### 7.6 Delete Medicine (Soft Delete)
+
+- Method: `DELETE`
+- URL: `{{baseUrl}}/medicine/:id`
+- Auth: seller cookies
+
+Behavior:
+
+- Medicine is not removed from the database.
+- `isAvailable` becomes `false`.
+- `stock` becomes `0`.
+- `price` becomes `0`.
+- `isFeatured` becomes `false`.
+
+## 8. Suggested Postman Test Flow
 
 1. Register customer
 2. Verify customer email OTP
@@ -430,7 +576,7 @@ Error response example (medicine exists under this category):
 10. Try protected API using banned user and verify failure
 11. Activate user again and verify login/access works
 
-## 8. Validation and Security Notes
+## 9. Validation and Security Notes
 
 - Zod validation is enabled for all create/update payloads in admin/seller/manufacturer/category/auth modules.
 - Protected routes use `checkAuth(...)` and role enforcement.
