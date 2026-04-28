@@ -10,9 +10,12 @@ model User {
   accounts      Account[]
 
   // custom fields
-  phone  String?
-  role   Role       @default(CUSTOMER)
-  status UserStatus @default(ACTIVE)
+  phone              String?
+  role               Role       @default(CUSTOMER)
+  status             UserStatus @default(ACTIVE)
+  needPasswordChange Boolean    @default(false)
+  isDeleted          Boolean    @default(false)
+  deletedAt          DateTime?
 
   sellerProfile Seller?
   cart          Cart?
@@ -22,6 +25,7 @@ model User {
   @@unique([email])
   @@index([role])
   @@index([status])
+  @@index([isDeleted])
   @@map("user")
 }
 

@@ -44,7 +44,7 @@ app.get("/", async (req: Request, res: Response) => {
 });
 
 // better-auth routes
-app.all("/api/auth/*", toNodeHandler(auth));
+app.use("/api/auth", toNodeHandler(auth));
 
 // custom routes
 app.use("/api/v1", indexRoutes);

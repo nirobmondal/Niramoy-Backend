@@ -1,32 +1,31 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "./prisma";
-import { envVars } from "../config/env";
 import { bearer, emailOTP } from "better-auth/plugins";
 import { Role, UserStatus } from "../../generated/prisma/enums";
+import { envVars } from "../config/env";
 import { sendEmail } from "../utils/email";
+import { prisma } from "./prisma";
+// If your Prisma file is located elsewhere, you can change the path
 
 export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
-    provider: "postgresql",
-  }),
   baseURL: envVars.BETTER_AUTH_URL,
+  secret: envVars.BETTER_AUTH_SECRET,
+  database: prismaAdapter(prisma, {
+    provider: "postgresql", // or "mysql", "postgresql", ...etc
+  }),
 
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
-  },
-
-  emailVerification: {
-    sendOnSignUp: true,
-    sendOnSignIn: true,
-    autoSignInAfterVerification: true,
+    // requireEmailVerification: true,
   },
 
   socialProviders: {
     google: {
-      clientId: envVars.GOOGLE_CLIENT_ID as string,
-      clientSecret: envVars.GOOGLE_CLIENT_SECRET as string,
+      clientId: envVars.GOOGLE_CLIENT_ID,
+      clientSecret: envVars.GOOGLE_CLIENT_SECRET,
+      accessType: "offline",
+      prompt: "select_account consent",
+      // callbackUrl: envVars.GOOGLE_CALLBACK_URL,
       mapProfileToUser: () => {
         return {
           role: Role.CUSTOMER,
@@ -37,6 +36,12 @@ export const auth = betterAuth({
     },
   },
 
+  // emailVerification: {
+  //   sendOnSignUp: true,
+  //   sendOnSignIn: true,
+  //   autoSignInAfterVerification: true,
+  // },
+
   user: {
     additionalFields: {
       role: {
@@ -44,14 +49,16 @@ export const auth = betterAuth({
         required: true,
         defaultValue: Role.CUSTOMER,
       },
-      phone: {
-        type: "string",
-        required: false,
-      },
+
       status: {
         type: "string",
         required: true,
         defaultValue: UserStatus.ACTIVE,
+      },
+
+      phone: {
+        type: "string",
+        required: false,
       },
     },
   },
@@ -125,11 +132,11 @@ export const auth = betterAuth({
   ],
 
   session: {
-    expiresIn: 60 * 60 * 60 * 24, // 1 day in seconds
-    updateAge: 60 * 60 * 60 * 24, // 1 day in seconds
+    expiresIn: 60 * 60 * 24, // 1 day in seconds
+    updateAge: 60 * 60 * 24, // 1 day in seconds
     cookieCache: {
       enabled: true,
-      maxAge: 60 * 60 * 60 * 24, // 1 day in seconds
+      maxAge: 60 * 60 * 24, // 1 day in seconds
     },
   },
 
@@ -138,7 +145,7 @@ export const auth = betterAuth({
   },
 
   trustedOrigins: [
-    envVars.BETTER_AUTH_URL || "http://localhost:5000",
+    process.env.BETTER_AUTH_URL || "http://localhost:5000",
     envVars.FRONTEND_URL,
   ],
 

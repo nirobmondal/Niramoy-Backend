@@ -1,13 +1,21 @@
 import status from "http-status";
 import { Role, UserStatus } from "../../../generated/prisma/enums";
 import AppError from "../../errorHelpers/AppError";
+import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { ICreateSellerProfilePayload } from "./seller.interface";
+import { tokenUtils } from "../../utils/token";
+import { StatusCodes } from "http-status-codes";
 
 const createSellerProfile = async (
   userId: string,
   payload: ICreateSellerProfilePayload,
+  sessionToken?: string,
 ) => {
+  if (!sessionToken) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, "Session token is required");
+  }
+
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -42,7 +50,7 @@ const createSellerProfile = async (
       },
     });
 
-    await tx.user.update({
+    const updatedUser = await tx.user.update({
       where: {
         id: userId,
       },
@@ -51,10 +59,52 @@ const createSellerProfile = async (
       },
     });
 
-    return sellerProfile;
+    console.log(updatedUser);
+
+    const accessToken = tokenUtils.getAccessToken({
+      userId: updatedUser.id,
+      role: updatedUser.role,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      status: updatedUser.status,
+      emailVerified: updatedUser.emailVerified,
+    });
+
+    const refreshToken = tokenUtils.getRefreshToken({
+      userId: updatedUser.id,
+      role: updatedUser.role,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      status: updatedUser.status,
+      emailVerified: updatedUser.emailVerified,
+    });
+
+    return {
+      sellerProfile,
+      updatedUser,
+      accessToken,
+      refreshToken,
+    };
   });
 
-  return result;
+  // Get the updated session after role change
+  const session = await auth.api.getSession({
+    headers: new Headers({
+      Authorization: `Bearer ${sessionToken}`,
+    }),
+  });
+
+  if (!session) {
+    throw new AppError(
+      StatusCodes.UNAUTHORIZED,
+      "Failed to get updated session",
+    );
+  }
+
+  return {
+    ...result,
+    token: sessionToken, // Return the session token to be set in cookie
+  };
 };
 
 export const sellerService = {

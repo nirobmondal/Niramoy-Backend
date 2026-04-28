@@ -1,4 +1,3 @@
-import status from "http-status";
 import { JwtPayload } from "jsonwebtoken";
 import { Role, UserStatus } from "../../../generated/prisma/enums";
 import { envVars } from "../../config/env";
@@ -6,231 +5,219 @@ import AppError from "../../errorHelpers/AppError";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
-import { sendEmail } from "../../utils/email";
 import { jwtUtils } from "../../utils/jwt";
 import { tokenUtils } from "../../utils/token";
 import {
-  IAuthTokenPayload,
   IChangePasswordPayload,
   ILoginUserPayload,
   IRegisterCustomerPayload,
   IUpdateMePayload,
 } from "./auth.interface";
-
-interface IAuthUser {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-  emailVerified: boolean;
-}
-
-interface IAuthSession {
-  user: IAuthUser;
-}
-
-interface ISignInOrSignUpResult {
-  user?: IAuthUser;
-  token?: string;
-  [key: string]: unknown;
-}
-
-const buildTokenPayload = (user: IAuthUser): IAuthTokenPayload => ({
-  userId: user.id,
-  role: user.role,
-  name: user.name,
-  email: user.email,
-  status: user.status,
-  emailVerified: user.emailVerified,
-});
-
-const getJwtPair = (user: IAuthUser) => {
-  const payload = buildTokenPayload(user);
-
-  return {
-    accessToken: tokenUtils.getAccessToken(payload as unknown as JwtPayload),
-    refreshToken: tokenUtils.getRefreshToken(payload as unknown as JwtPayload),
-  };
-};
-
-const ensureUserIsActive = (user: IAuthUser) => {
-  if ((user.status as UserStatus) === UserStatus.BANNED) {
-    throw new AppError(status.FORBIDDEN, "Your account is blocked");
-  }
-};
-
-const getUserProfileById = async (userId: string) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      phone: true,
-      image: true,
-      role: true,
-      status: true,
-      emailVerified: true,
-      createdAt: true,
-      updatedAt: true,
-      sellerProfile: true,
-    },
-  });
-
-  if (!user) {
-    throw new AppError(status.NOT_FOUND, "User not found");
-  }
-
-  return user;
-};
+import { StatusCodes } from "http-status-codes";
 
 const registerCustomer = async (payload: IRegisterCustomerPayload) => {
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email: payload.email,
-    },
-  });
+  const { name, email, password } = payload;
 
-  if (existingUser) {
-    throw new AppError(status.CONFLICT, "User already exists with this email");
-  }
-
-  const result = (await auth.api.signUpEmail({
+  const data = await auth.api.signUpEmail({
     body: {
-      name: payload.name,
-      email: payload.email,
-      password: payload.password,
-      image: payload.image,
-      phone: payload.phone,
-      role: Role.CUSTOMER,
-      status: UserStatus.ACTIVE,
+      name,
+      email,
+      password,
     },
-  })) as ISignInOrSignUpResult;
-
-  if (!result.user) {
-    throw new AppError(status.BAD_REQUEST, "Failed to register customer");
-  }
-
-  await prisma.cart.upsert({
-    where: { userId: result.user.id },
-    update: {},
-    create: { userId: result.user.id },
   });
 
-  const { accessToken, refreshToken } = getJwtPair(result.user);
+  if (!data.user) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Failed to register customer");
+  }
 
-  return {
-    ...result,
-    accessToken,
-    refreshToken,
-  };
+  try {
+    const cart = await prisma.$transaction(async (tx) => {
+      const cartTx = await tx.cart.create({
+        data: {
+          userId: data.user.id,
+        },
+      });
+
+      return cartTx;
+    });
+
+    const accessToken = tokenUtils.getAccessToken({
+      userId: data.user.id,
+      role: data.user.role,
+      name: data.user.name,
+      email: data.user.email,
+      status: data.user.status,
+      emailVerified: data.user.emailVerified,
+    });
+
+    const refreshToken = tokenUtils.getRefreshToken({
+      userId: data.user.id,
+      role: data.user.role,
+      name: data.user.name,
+      email: data.user.email,
+      status: data.user.status,
+      emailVerified: data.user.emailVerified,
+    });
+
+    return {
+      ...data,
+      accessToken,
+      refreshToken,
+      cart,
+    };
+  } catch (error) {
+    console.log("Transaction error : ", error);
+    await prisma.user.delete({
+      where: {
+        id: data.user.id,
+      },
+    });
+    throw error;
+  }
 };
 
 const loginUser = async (payload: ILoginUserPayload) => {
-  const result = (await auth.api.signInEmail({
-    body: {
-      email: payload.email,
-      password: payload.password,
-    },
-  })) as ISignInOrSignUpResult;
+  const { email, password } = payload;
 
-  if (!result.user) {
-    throw new AppError(status.UNAUTHORIZED, "Invalid credentials");
+  const data = await auth.api.signInEmail({
+    body: {
+      email,
+      password,
+    },
+  });
+
+  if (data.user.status === UserStatus.BANNED) {
+    throw new AppError(StatusCodes.FORBIDDEN, "User is banned");
   }
 
-  ensureUserIsActive(result.user);
+  const accessToken = tokenUtils.getAccessToken({
+    userId: data.user.id,
+    role: data.user.role,
+    name: data.user.name,
+    email: data.user.email,
+    status: data.user.status,
+    emailVerified: data.user.emailVerified,
+  });
 
-  const { accessToken, refreshToken } = getJwtPair(result.user);
+  const refreshToken = tokenUtils.getRefreshToken({
+    userId: data.user.id,
+    role: data.user.role,
+    name: data.user.name,
+    email: data.user.email,
+    status: data.user.status,
+    emailVerified: data.user.emailVerified,
+  });
 
   return {
-    ...result,
+    ...data,
     accessToken,
     refreshToken,
   };
 };
 
 const getMe = async (user: IRequestUser) => {
-  return getUserProfileById(user.userId);
-};
-
-const updateMe = async (user: IRequestUser, updateData: IUpdateMePayload) => {
-  const existingUser = await prisma.user.findUnique({
-    where: { id: user.userId },
+  const isUserExists = await prisma.user.findUnique({
+    where: {
+      id: user.userId,
+    },
     include: {
       sellerProfile: true,
     },
   });
 
-  if (!existingUser) {
-    throw new AppError(status.NOT_FOUND, "User not found");
+  if (!isUserExists) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
   }
 
-  if (existingUser.status === UserStatus.BANNED) {
-    throw new AppError(status.FORBIDDEN, "Your account is blocked");
+  return isUserExists;
+};
+
+const updateMe = async (user: IRequestUser, payload: IUpdateMePayload) => {
+  const isUserExists = await prisma.user.findUnique({
+    where: { id: user.userId },
+    include: { sellerProfile: true },
+  });
+
+  if (!isUserExists) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
   }
 
-  if (updateData.sellerProfile && existingUser.role !== Role.SELLER) {
+  if (isUserExists.status === UserStatus.BANNED) {
+    throw new AppError(StatusCodes.FORBIDDEN, "User is banned");
+  }
+
+  const { sellerProfile, ...userPayload } = payload;
+  const sellerPayload = sellerProfile ?? {};
+
+  if (sellerProfile && isUserExists.role !== Role.SELLER) {
     throw new AppError(
-      status.BAD_REQUEST,
-      "Seller profile can only be updated by seller accounts",
+      StatusCodes.BAD_REQUEST,
+      "Only seller can update seller profile",
     );
   }
 
-  const userUpdateData = {
-    name: updateData.name,
-    phone: updateData.phone,
-    image: updateData.image,
-  };
+  const cleanUserPayload = Object.fromEntries(
+    Object.entries(userPayload).filter(([_, v]) => v !== undefined),
+  );
 
-  await prisma.$transaction(async (tx) => {
-    if (
-      userUpdateData.name !== undefined ||
-      userUpdateData.phone !== undefined ||
-      userUpdateData.image !== undefined
-    ) {
+  const cleanSellerPayload = Object.fromEntries(
+    Object.entries(sellerPayload).filter(([_, v]) => v !== undefined),
+  );
+
+  const hasUserUpdateFields = Object.keys(cleanUserPayload).length > 0;
+  const hasSellerUpdateFields = Object.keys(cleanSellerPayload).length > 0;
+
+  if (!hasUserUpdateFields && !hasSellerUpdateFields) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "At least one field is required to update profile",
+    );
+  }
+
+  const updatedUser = await prisma.$transaction(async (tx) => {
+    if (hasUserUpdateFields) {
       await tx.user.update({
         where: { id: user.userId },
-        data: userUpdateData,
+        data: cleanUserPayload,
       });
     }
 
-    if (updateData.sellerProfile && existingUser.role === Role.SELLER) {
-      const hasSellerUpdate = Object.values(updateData.sellerProfile).some(
-        (field) => field !== undefined,
-      );
-
-      if (hasSellerUpdate) {
-        await tx.seller.upsert({
-          where: { userId: user.userId },
-          update: {
-            shopName: updateData.sellerProfile.shopName,
-            shopAddress: updateData.sellerProfile.shopAddress,
-            shopPhone: updateData.sellerProfile.shopPhone,
-          },
-          create: {
-            userId: user.userId,
-            shopName:
-              updateData.sellerProfile.shopName ||
-              existingUser.sellerProfile?.shopName ||
-              `${existingUser.name}'s Shop`,
-            shopAddress: updateData.sellerProfile.shopAddress,
-            shopPhone: updateData.sellerProfile.shopPhone,
-          },
-        });
+    if (hasSellerUpdateFields) {
+      if (isUserExists.role !== Role.SELLER) {
+        throw new AppError(
+          StatusCodes.BAD_REQUEST,
+          "Only seller can update seller profile",
+        );
       }
+
+      if (!isUserExists.sellerProfile) {
+        throw new AppError(
+          StatusCodes.BAD_REQUEST,
+          "Seller profile does not exist",
+        );
+      }
+
+      await tx.seller.update({
+        where: { userId: user.userId },
+        data: cleanSellerPayload,
+      });
     }
+
+    return tx.user.findUnique({
+      where: { id: user.userId },
+      include: { sellerProfile: true },
+    });
   });
 
-  return getUserProfileById(user.userId);
+  return updatedUser;
 };
 
-const getNewToken = async (refreshToken: string, sessionToken: string) => {
+const getNewToken = async (refreshToken: string, sessionToken?: string) => {
   if (!sessionToken) {
-    throw new AppError(status.UNAUTHORIZED, "Session token is missing");
+    throw new AppError(StatusCodes.UNAUTHORIZED, "Session token is missing");
   }
 
-  const currentSession = await prisma.session.findUnique({
+  const isSessionTokenExists = await prisma.session.findUnique({
     where: {
       token: sessionToken,
     },
@@ -239,74 +226,81 @@ const getNewToken = async (refreshToken: string, sessionToken: string) => {
     },
   });
 
-  if (!currentSession || currentSession.expiresAt <= new Date()) {
-    throw new AppError(status.UNAUTHORIZED, "Session is invalid or expired");
+  if (!isSessionTokenExists) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid session token");
   }
-
-  ensureUserIsActive(currentSession.user);
 
   const verifiedRefreshToken = jwtUtils.verifyToken(
     refreshToken,
     envVars.REFRESH_TOKEN_SECRET,
   );
 
-  if (!verifiedRefreshToken.success || !verifiedRefreshToken.data) {
-    throw new AppError(status.UNAUTHORIZED, "Invalid refresh token");
+  if (!verifiedRefreshToken.success && verifiedRefreshToken.error) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid refresh token");
   }
 
-  const tokenPayload = verifiedRefreshToken.data as JwtPayload;
+  const data = verifiedRefreshToken.data as JwtPayload;
 
-  if (tokenPayload.userId !== currentSession.userId) {
-    throw new AppError(
-      status.UNAUTHORIZED,
-      "Refresh token does not match session",
-    );
-  }
+  const newAccessToken = tokenUtils.getAccessToken({
+    userId: data.userId,
+    role: data.role,
+    name: data.name,
+    email: data.email,
+    status: data.status,
+    emailVerified: data.emailVerified,
+  });
 
-  const { accessToken, refreshToken: newRefreshToken } = getJwtPair(
-    currentSession.user,
-  );
+  const newRefreshToken = tokenUtils.getRefreshToken({
+    userId: data.userId,
+    role: data.role,
+    name: data.name,
+    email: data.email,
+    status: data.status,
+    emailVerified: data.emailVerified,
+  });
 
-  await prisma.session.update({
+  const { token } = await prisma.session.update({
     where: {
       token: sessionToken,
     },
     data: {
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      token: sessionToken,
+      expiresAt: new Date(Date.now() + 60 * 60 * 24 * 1000),
+      updatedAt: new Date(),
     },
   });
 
   return {
-    accessToken,
+    accessToken: newAccessToken,
     refreshToken: newRefreshToken,
-    sessionToken,
+    sessionToken: token,
   };
 };
 
 const changePassword = async (
   payload: IChangePasswordPayload,
-  sessionToken: string,
+  sessionToken?: string,
 ) => {
   if (!sessionToken) {
-    throw new AppError(status.UNAUTHORIZED, "Session token is missing");
+    throw new AppError(StatusCodes.UNAUTHORIZED, "Session token is missing");
   }
 
-  const session = (await auth.api.getSession({
+  const session = await auth.api.getSession({
     headers: new Headers({
       Authorization: `Bearer ${sessionToken}`,
     }),
-  })) as IAuthSession | null;
+  });
 
-  if (!session || !session.user) {
-    throw new AppError(status.UNAUTHORIZED, "Invalid session token");
+  if (!session) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid session token");
   }
 
-  ensureUserIsActive(session.user);
+  const { currentPassword, newPassword } = payload;
 
   const result = await auth.api.changePassword({
     body: {
-      currentPassword: payload.currentPassword,
-      newPassword: payload.newPassword,
+      currentPassword,
+      newPassword,
       revokeOtherSessions: true,
     },
     headers: new Headers({
@@ -314,17 +308,22 @@ const changePassword = async (
     }),
   });
 
-  const { accessToken, refreshToken } = getJwtPair(session.user);
+  const accessToken = tokenUtils.getAccessToken({
+    userId: session.user.id,
+    role: session.user.role,
+    name: session.user.name,
+    email: session.user.email,
+    status: session.user.status,
+    emailVerified: session.user.emailVerified,
+  });
 
-  await sendEmail({
-    to: session.user.email,
-    subject: "Your password was changed",
-    templateName: "passwordChanged",
-    templateData: {
-      name: session.user.name,
-      supportEmail: envVars.EMAIL_SENDER.SMTP_FROM,
-      changedAt: new Date().toLocaleString(),
-    },
+  const refreshToken = tokenUtils.getRefreshToken({
+    userId: session.user.id,
+    role: session.user.role,
+    name: session.user.name,
+    email: session.user.email,
+    status: session.user.status,
+    emailVerified: session.user.emailVerified,
   });
 
   return {
@@ -335,15 +334,13 @@ const changePassword = async (
 };
 
 const logoutUser = async (sessionToken: string) => {
-  if (!sessionToken) {
-    return { success: true };
-  }
-
-  return auth.api.signOut({
+  const result = await auth.api.signOut({
     headers: new Headers({
       Authorization: `Bearer ${sessionToken}`,
     }),
   });
+
+  return result;
 };
 
 const verifyEmail = async (email: string, otp: string) => {
@@ -354,38 +351,32 @@ const verifyEmail = async (email: string, otp: string) => {
     },
   });
 
-  if ((result as { status?: boolean }).status) {
-    const user = await prisma.user.update({
-      where: { email },
-      data: { emailVerified: true },
-    });
-
-    await sendEmail({
-      to: user.email,
-      subject: "Welcome to Niramoy",
-      templateName: "welcome",
-      templateData: {
-        name: user.name,
-        loginUrl: `${envVars.FRONTEND_URL}/login`,
+  if (result.status && !result.user.emailVerified) {
+    await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        emailVerified: true,
       },
     });
   }
-
-  return result;
 };
 
 const forgetPassword = async (email: string) => {
-  const existingUser = await prisma.user.findUnique({
+  const isUserExist = await prisma.user.findUnique({
     where: {
       email,
     },
   });
 
-  if (!existingUser) {
-    throw new AppError(status.NOT_FOUND, "User not found");
+  if (!isUserExist) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
   }
 
-  ensureUserIsActive(existingUser);
+  if (!isUserExist.emailVerified) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Email not verified");
+  }
 
   await auth.api.requestPasswordResetEmailOTP({
     body: {
@@ -399,17 +390,23 @@ const resetPassword = async (
   otp: string,
   newPassword: string,
 ) => {
-  const existingUser = await prisma.user.findUnique({
+  const isUserExist = await prisma.user.findUnique({
     where: {
       email,
     },
   });
 
-  if (!existingUser) {
-    throw new AppError(status.NOT_FOUND, "User not found");
+  if (!isUserExist) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
   }
 
-  ensureUserIsActive(existingUser);
+  if (!isUserExist.emailVerified) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Email not verified");
+  }
+
+  if (isUserExist.status === UserStatus.BANNED) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User is banned");
+  }
 
   await auth.api.resetPasswordEmailOTP({
     body: {
@@ -421,25 +418,44 @@ const resetPassword = async (
 
   await prisma.session.deleteMany({
     where: {
-      userId: existingUser.id,
+      userId: isUserExist.id,
     },
   });
 };
 
-const googleLoginSuccess = async (session: IAuthSession) => {
-  if (!session.user) {
-    throw new AppError(status.UNAUTHORIZED, "No authenticated user found");
-  }
-
-  ensureUserIsActive(session.user);
-
-  await prisma.cart.upsert({
-    where: { userId: session.user.id },
-    update: {},
-    create: { userId: session.user.id },
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const googleLoginSuccess = async (session: Record<string, any>) => {
+  const isCartExists = await prisma.cart.findUnique({
+    where: {
+      userId: session.user.id,
+    },
   });
 
-  const { accessToken, refreshToken } = getJwtPair(session.user);
+  if (!isCartExists) {
+    await prisma.cart.create({
+      data: {
+        userId: session.user.id,
+      },
+    });
+  }
+
+  const accessToken = tokenUtils.getAccessToken({
+    userId: session.user.id,
+    role: session.user.role,
+    name: session.user.name,
+    email: session.user.email,
+    status: session.user.status,
+    emailVerified: session.user.emailVerified,
+  });
+
+  const refreshToken = tokenUtils.getRefreshToken({
+    userId: session.user.id,
+    role: session.user.role,
+    name: session.user.name,
+    email: session.user.email,
+    status: session.user.status,
+    emailVerified: session.user.emailVerified,
+  });
 
   return {
     accessToken,
@@ -447,7 +463,7 @@ const googleLoginSuccess = async (session: IAuthSession) => {
   };
 };
 
-export const AuthService = {
+export const authService = {
   registerCustomer,
   loginUser,
   getMe,

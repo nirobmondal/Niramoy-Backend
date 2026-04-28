@@ -1,75 +1,66 @@
 import { Router } from "express";
+import { authController } from "./auth.controller";
 import { Role } from "../../../generated/prisma/enums";
-import { multerUpload } from "../../config/multer.config";
 import { checkAuth } from "../../middleware/checkAuth";
+import { multerUpload } from "../../config/multer.config";
 import { validateRequest } from "../../middleware/validateRequest";
-import { AuthController } from "./auth.controller";
-import { AuthValidation } from "./auth.validation";
+import { authValidation } from "./auth.validation";
 
 const router = Router();
 
 router.post(
-  "/register/customer",
-  multerUpload.single("file"),
-  validateRequest(AuthValidation.registerCustomerSchema),
-  AuthController.registerCustomer,
+  "/register",
+  validateRequest(authValidation.registerCustomerValidationSchema),
+  authController.registerCustomer,
 );
-
 router.post(
   "/login",
-  validateRequest(AuthValidation.loginSchema),
-  AuthController.loginUser,
+  validateRequest(authValidation.loginUserValidationSchema),
+  authController.loginUser,
 );
-
 router.get(
   "/me",
   checkAuth(Role.CUSTOMER, Role.SELLER, Role.ADMIN),
-  AuthController.getMe,
+  authController.getMe,
 );
-
 router.patch(
-  "/me",
-  checkAuth(Role.CUSTOMER, Role.SELLER, Role.ADMIN),
+  "/update-me",
   multerUpload.single("file"),
-  validateRequest(AuthValidation.updateMeSchema),
-  AuthController.updateMe,
+  checkAuth(Role.CUSTOMER, Role.SELLER, Role.ADMIN),
+  validateRequest(authValidation.updateMeValidationSchema),
+  authController.updateMe,
 );
-
-router.post(
-  "/refresh-token",
-  validateRequest(AuthValidation.refreshTokenSchema),
-  AuthController.getNewToken,
-);
-
+router.post("/refresh-token", authController.getNewToken);
 router.post(
   "/change-password",
   checkAuth(Role.CUSTOMER, Role.SELLER, Role.ADMIN),
-  validateRequest(AuthValidation.changePasswordSchema),
-  AuthController.changePassword,
+  validateRequest(authValidation.changePasswordValidationSchema),
+  authController.changePassword,
 );
-
-router.post("/logout", AuthController.logoutUser);
-
+router.post(
+  "/logout",
+  checkAuth(Role.CUSTOMER, Role.SELLER, Role.ADMIN),
+  authController.logoutUser,
+);
 router.post(
   "/verify-email",
-  validateRequest(AuthValidation.verifyEmailSchema),
-  AuthController.verifyEmail,
+  validateRequest(authValidation.verifyEmailValidationSchema),
+  authController.verifyEmail,
 );
-
 router.post(
-  "/forgot-password",
-  validateRequest(AuthValidation.forgotPasswordSchema),
-  AuthController.forgetPassword,
+  "/forget-password",
+  validateRequest(authValidation.forgetPasswordValidationSchema),
+  authController.forgetPassword,
 );
 
 router.post(
   "/reset-password",
-  validateRequest(AuthValidation.resetPasswordSchema),
-  AuthController.resetPassword,
+  validateRequest(authValidation.resetPasswordValidationSchema),
+  authController.resetPassword,
 );
 
-router.get("/login/google", AuthController.googleLogin);
-router.get("/google/success", AuthController.googleLoginSuccess);
-router.get("/google/error", AuthController.handleOAuthError);
+router.get("/login/google", authController.googleLogin);
+router.get("/google/success", authController.googleLoginSuccess);
+router.get("/oauth/error", authController.handleOAuthError);
 
-export const AuthRoute = router;
+export const authRoute = router;

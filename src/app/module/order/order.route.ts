@@ -20,7 +20,7 @@ router.get(
 );
 router.get(
   "/:id",
-  checkAuth(Role.ADMIN, Role.CUSTOMER),
+  checkAuth(Role.ADMIN, Role.CUSTOMER, Role.SELLER),
   orderController.getOrderById,
 );
 router.patch(

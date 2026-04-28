@@ -7,7 +7,6 @@
     "start": "node dist/server.js",
     "build": "tsup",
     "dev": "tsx watch src/server.ts",
-    "seed:admin": "tsx src/app/scripts/seedAdmin.ts",
     "lint": "eslint ./src/**/*",
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",

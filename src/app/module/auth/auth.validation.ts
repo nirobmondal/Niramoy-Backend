@@ -1,134 +1,81 @@
 import z from "zod";
 
-const strongPasswordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
-
-const registerCustomerSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Name must be at least 2 characters")
-    .max(100, "Name must be at most 100 characters"),
-  email: z.string().trim().email("Please provide a valid email").toLowerCase(),
+const registerCustomerValidationSchema = z.object({
+  name: z.string().trim().min(1, "Name is required"),
+  email: z.email("Invalid email address"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
-    .regex(
-      strongPasswordRegex,
-      "Password must include uppercase, lowercase, number and special character",
-    ),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^[+]?\d{8,15}$/, "Phone must contain 8 to 15 digits")
-    .optional(),
-  image: z.string().url("Image must be a valid URL").optional(),
+    .max(100, "Password can be at most 100 characters"),
 });
 
-const loginSchema = z.object({
-  email: z.string().trim().email("Please provide a valid email").toLowerCase(),
+const loginUserValidationSchema = z.object({
+  email: z.email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
 });
 
-const updateMeSchema = z
-  .object({
-    name: z
-      .string()
-      .trim()
-      .min(2, "Name must be at least 2 characters")
-      .max(100, "Name must be at most 100 characters")
-      .optional(),
-    phone: z
-      .string()
-      .trim()
-      .regex(/^[+]?\d{8,15}$/, "Phone must contain 8 to 15 digits")
-      .optional(),
-    image: z.string().url("Image must be a valid URL").optional(),
-    sellerProfile: z
-      .object({
-        shopName: z
-          .string()
-          .trim()
-          .min(2, "Shop name must be at least 2 characters")
-          .max(120, "Shop name must be at most 120 characters")
-          .optional(),
-        shopAddress: z
-          .string()
-          .trim()
-          .max(255, "Shop address must be at most 255 characters")
-          .optional(),
-        shopPhone: z
-          .string()
-          .trim()
-          .regex(/^[+]?\d{8,15}$/, "Shop phone must contain 8 to 15 digits")
-          .optional(),
-      })
-      .optional(),
-  })
-  .refine((value) => Object.keys(value).length > 0, {
-    message: "At least one field is required for update",
-  });
+const changePasswordValidationSchema = z.object({
+  currentPassword: z.string().min(1, "Current password is required"),
+  newPassword: z
+    .string()
+    .min(8, "New password must be at least 8 characters")
+    .max(100, "New password can be at most 100 characters"),
+});
 
-const refreshTokenSchema = z.object({});
-
-const changePasswordSchema = z
-  .object({
-    currentPassword: z
-      .string()
-      .min(8, "Current password must be at least 8 characters"),
-    newPassword: z
-      .string()
-      .min(8, "New password must be at least 8 characters")
-      .regex(
-        strongPasswordRegex,
-        "New password must include uppercase, lowercase, number and special character",
-      ),
-  })
-  .refine((value) => value.currentPassword !== value.newPassword, {
-    path: ["newPassword"],
-    message: "New password must be different from current password",
-  });
-
-const verifyEmailSchema = z.object({
-  email: z.string().trim().email("Please provide a valid email").toLowerCase(),
+const resetPasswordValidationSchema = z.object({
+  email: z.email("Invalid email address"),
   otp: z
     .string()
     .trim()
-    .regex(/^\d{6}$/, "OTP must be 6 digits"),
+    .length(6, "OTP must be exactly 6 digits")
+    .regex(/^\d{6}$/, "OTP must contain only digits"),
+  newPassword: z
+    .string()
+    .min(8, "New password must be at least 8 characters")
+    .max(100, "New password can be at most 100 characters"),
 });
 
-const forgotPasswordSchema = z.object({
-  email: z.string().trim().email("Please provide a valid email").toLowerCase(),
+const verifyEmailValidationSchema = z.object({
+  email: z.email("Invalid email address"),
+  otp: z
+    .string()
+    .trim()
+    .length(6, "OTP must be exactly 6 digits")
+    .regex(/^\d{6}$/, "OTP must contain only digits"),
 });
 
-const resetPasswordSchema = z
+const forgetPasswordValidationSchema = z.object({
+  email: z.email("Invalid email address"),
+});
+
+const updateSellerProfileValidationSchema = z
   .object({
-    email: z
-      .string()
-      .trim()
-      .email("Please provide a valid email")
-      .toLowerCase(),
-    otp: z
-      .string()
-      .trim()
-      .regex(/^\d{6}$/, "OTP must be 6 digits"),
-    newPassword: z
-      .string()
-      .min(8, "New password must be at least 8 characters")
-      .regex(
-        strongPasswordRegex,
-        "New password must include uppercase, lowercase, number and special character",
-      ),
+    shopName: z.string().trim().min(1).optional(),
+    shopAddress: z.string().trim().min(1).optional(),
+    shopPhone: z.string().trim().min(1).optional(),
   })
-  .strict();
+  .refine((value) => Object.keys(value).length > 0, {
+    message: "At least one seller profile field is required",
+  })
+  .optional();
 
-export const AuthValidation = {
-  registerCustomerSchema,
-  loginSchema,
-  updateMeSchema,
-  refreshTokenSchema,
-  changePasswordSchema,
-  verifyEmailSchema,
-  forgotPasswordSchema,
-  resetPasswordSchema,
+const updateMeValidationSchema = z
+  .object({
+    name: z.string().trim().min(1).optional(),
+    phone: z.string().trim().min(1).optional(),
+    image: z.url("Image must be a valid URL").optional(),
+    sellerProfile: updateSellerProfileValidationSchema,
+  })
+  .refine((value) => Object.keys(value).length > 0, {
+    message: "At least one field is required to update profile",
+  });
+
+export const authValidation = {
+  registerCustomerValidationSchema,
+  loginUserValidationSchema,
+  changePasswordValidationSchema,
+  verifyEmailValidationSchema,
+  forgetPasswordValidationSchema,
+  resetPasswordValidationSchema,
+  updateMeValidationSchema,
 };
